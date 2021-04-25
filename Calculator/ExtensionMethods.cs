@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calculator {
-    static class Utils {
-        public static Stack<T> Reverse<T>(Stack<T> stack) {
+namespace ExtensionMethods {
+    static class ExtensionMethods {
+        public static Stack<T> Reverse<T>(this Stack<T> stack) {
             Stack<T> temp = new();
             while (stack.Count > 0) {
                 temp.Push(stack.Pop());

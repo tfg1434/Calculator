@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\houhu\\Desktop\\Calculator\\Calculator\\Calculator.csproj": {}
+    "C:\\Users\\Eglin\\source\\repos\\Calculator\\Calculator\\Calculator.csproj": {}
   },
   "projects": {
-    "C:\\Users\\houhu\\Desktop\\Calculator\\Calculator\\Calculator.csproj": {
+    "C:\\Users\\Eglin\\source\\repos\\Calculator\\Calculator\\Calculator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\houhu\\Desktop\\Calculator\\Calculator\\Calculator.csproj",
+        "projectUniqueName": "C:\\Users\\Eglin\\source\\repos\\Calculator\\Calculator\\Calculator.csproj",
         "projectName": "Calculator",
-        "projectPath": "C:\\Users\\houhu\\Desktop\\Calculator\\Calculator\\Calculator.csproj",
-        "packagesPath": "C:\\Users\\houhu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\houhu\\Desktop\\Calculator\\Calculator\\obj\\",
+        "projectPath": "C:\\Users\\Eglin\\source\\repos\\Calculator\\Calculator\\Calculator.csproj",
+        "packagesPath": "C:\\Users\\Eglin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Eglin\\source\\repos\\Calculator\\Calculator\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\houhu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Eglin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -54,7 +57,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
         }
       }
     }
