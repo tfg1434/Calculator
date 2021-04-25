@@ -98,7 +98,11 @@ namespace Calculator {
                     while (operator_stack.Count > 0 && operator_stack.Peek() != "(") {
                         rpn.Add(operator_stack.Pop());
                     }
-                    // If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
+                    //If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
+                    if (operator_stack.Count == 0) {
+                        throw new Exception("Mismatched parenthesis");
+                    }
+
                     if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
                         operator_stack.Pop();
                     }
@@ -107,7 +111,11 @@ namespace Calculator {
 
             if (equation_stack.Count == 0) {
                 while (operator_stack.Count > 0) {
-                    /* If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses. */
+                    //If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses.
+                    if (operator_stack.Peek() == "(" || operator_stack.Peek() == ")") {
+                        throw new Exception("Mismatched Parentheses");
+                    }
+
                     rpn.Add(operator_stack.Pop());
                 }
             }
