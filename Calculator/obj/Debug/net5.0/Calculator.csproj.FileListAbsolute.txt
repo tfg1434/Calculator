@@ -30,3 +30,5 @@ C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.dl
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\ref\Calculator.dll
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.pdb
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.genruntimeconfig.cache
+C:\Users\Eglin\source\repos\Calculator\Calculator\bin\Debug\net5.0\DecimalEx.dll
+C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.csproj.CopyComplete

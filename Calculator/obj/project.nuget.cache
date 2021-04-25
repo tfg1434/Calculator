@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "fcGPjl+drWogco3AIFRqGHo9JOane+Wip9/TYD+Cx7jx5Zqnz6ItYfy6w+3qO7b2AKkNDQy0AQ6+W3G8BHvzWw==",
+  "dgSpecHash": "1+3f9NxoZWhXHFEQxDVDrKXnvk33ZTwHHKI1HOCU/8rXNZ3TpMc3R6a2wsvZXZUWMQ7X6axP4eoM14BzavUH+A==",
   "success": true,
   "projectFilePath": "C:\\Users\\Eglin\\source\\repos\\Calculator\\Calculator\\Calculator.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Eglin\\.nuget\\packages\\decimalmath.decimalex\\1.0.2\\decimalmath.decimalex.1.0.2.nupkg.sha512"
+  ],
   "logs": []
 }

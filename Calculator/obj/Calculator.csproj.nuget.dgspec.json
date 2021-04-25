@@ -42,6 +42,12 @@
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
+          "dependencies": {
+            "DecimalMath.DecimalEx": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExtensionMethods;
+using DecimalMath;
 
 namespace Calculator {
     class Program {
@@ -11,21 +12,21 @@ namespace Calculator {
             Console.WriteLine(Solve(rpn));
         }
 
-        static int Solve(List<string> rpn) {
+        static decimal Solve(List<string> rpn) {
             Stack<string> stack = new();
 
             foreach (string token in rpn) {
-                if (int.TryParse(token, out _)) {
+                if (decimal.TryParse(token, out _)) {
                     stack.Push(token);
                     continue;
 
                 } else {
                     //it's an operator
-                    int n1 = int.Parse(stack.Pop());
-                    int n2 = int.Parse(stack.Pop());
+                    decimal n1 = decimal.Parse(stack.Pop());
+                    decimal n2 = decimal.Parse(stack.Pop());
 
                     stack.Push(token switch {
-                        "^" => ((int)Math.Pow(n2, n1)).ToString(),
+                        "^" => DecimalEx.Pow(n2, n1).ToString(),
                         "*" => (n1 * n2).ToString(),
                         "/" => (n1 / n2).ToString(),
                         "+" => (n1 + n2).ToString(),
@@ -35,7 +36,7 @@ namespace Calculator {
                 }
             }
 
-            return int.Parse(stack.Pop());
+            return decimal.Parse(stack.Pop());
         }
 
         static List<string> ShuntingYard(string equation) {
@@ -43,7 +44,7 @@ namespace Calculator {
             //convert (12+3) to [(, 12, +, 3, )]
             string to_add = "";
             foreach (char c in equation) {
-                if (char.IsDigit(c)) {
+                if (char.IsDigit(c) || c == '.') {
                     to_add += c;
 
                 } else {
@@ -78,8 +79,8 @@ namespace Calculator {
 
             while (equation_stack.Count > 0) {
                 string token = equation_stack.Pop();
-                if (int.TryParse(token, out int num)) {
-                    rpn.Add(num.ToString());
+                if (decimal.TryParse(token, out _)) {
+                    rpn.Add(token);
 
                 } else if (operators.Contains(token)) {
                     while (operator_stack.Count > 0 && operators.Contains(operator_stack.Peek()) &&

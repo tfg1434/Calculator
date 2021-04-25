@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "(9^2)^1"
+      "commandLineArgs": "(3.14*2)^2"
     }
   }
 }
