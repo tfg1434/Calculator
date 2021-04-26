@@ -21,7 +21,6 @@ C:\Users\Eglin\source\repos\Calculator\Calculator\bin\Debug\net5.0\Calculator.ru
 C:\Users\Eglin\source\repos\Calculator\Calculator\bin\Debug\net5.0\Calculator.dll
 C:\Users\Eglin\source\repos\Calculator\Calculator\bin\Debug\net5.0\ref\Calculator.dll
 C:\Users\Eglin\source\repos\Calculator\Calculator\bin\Debug\net5.0\Calculator.pdb
-C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.csprojAssemblyReference.cache
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.AssemblyInfoInputs.cache
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.AssemblyInfo.cs
@@ -32,3 +31,4 @@ C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.pd
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.genruntimeconfig.cache
 C:\Users\Eglin\source\repos\Calculator\Calculator\bin\Debug\net5.0\DecimalEx.dll
 C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.csproj.CopyComplete
+C:\Users\Eglin\source\repos\Calculator\Calculator\obj\Debug\net5.0\Calculator.csprojAssemblyReference.cache

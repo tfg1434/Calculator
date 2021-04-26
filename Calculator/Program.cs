@@ -41,19 +41,10 @@ namespace Calculator {
 
         static List<string> ShuntingYard(string equation) {
             Stack<string> equation_stack = new();
-            //convert (12+3) to [(, 12, +, 3, )]
-            string to_add = "";
-            foreach (char c in equation) {
-                if (char.IsDigit(c) || c == '.') {
-                    to_add += c;
-
-                } else {
-                    equation_stack.Push(to_add);
-                    to_add = "";
-                    equation_stack.Push(c.ToString());
-                }
+            Lexer lexer = new(equation);
+            while (!lexer.empty) {
+                equation_stack.Push(lexer.Next());
             }
-            equation_stack.Push(to_add);
             equation_stack = equation_stack.Reverse();
 
             Stack<string> operator_stack = new();
