@@ -12,6 +12,8 @@ namespace Calculator {
             Console.WriteLine(Solve(rpn));
         }
 
+        static readonly string[] operators = { "+", "-", "*", "/", "^" };
+
         static decimal Solve(List<string> rpn) {
             Stack<string> stack = new();
 
@@ -20,7 +22,7 @@ namespace Calculator {
                     stack.Push(token);
                     continue;
 
-                } else {
+                } else if (operators.Contains(token)){
                     //it's an operator
                     decimal n1 = decimal.Parse(stack.Pop());
                     decimal n2 = decimal.Parse(stack.Pop());
@@ -33,6 +35,21 @@ namespace Calculator {
                         "-" => (n1 - n2).ToString(),
                         _ => throw new Exception("wtf")
                     });
+
+                } else {
+                    //function
+                    switch (token) {
+                        case "e":
+                            stack.Push(Math.E.ToString());
+                            break;
+                        case "pi":
+                            stack.Push(Math.PI.ToString());
+                            break;
+                        case "abs":
+                            stack.Push(Math.Abs(decimal.Parse(stack.Pop())).ToString());
+                            break;
+                        case 
+                    }
                 }
             }
 
@@ -50,7 +67,6 @@ namespace Calculator {
             Stack<string> operator_stack = new();
             List<string> rpn = new();
 
-            string[] operators = { "+", "-", "*", "/", "^" };
             Dictionary<string, int> precedence = new() {
                 ["^"] = 4,
                 ["*"] = 3,
@@ -72,6 +88,10 @@ namespace Calculator {
                 string token = equation_stack.Pop();
                 if (decimal.TryParse(token, out _)) {
                     rpn.Add(token);
+
+                } else if (token.All(char.IsLetter)){
+                    //operator
+                    operator_stack.Push(token);
 
                 } else if (operators.Contains(token)) {
                     while (operator_stack.Count > 0 && operators.Contains(operator_stack.Peek()) &&
@@ -96,6 +116,9 @@ namespace Calculator {
 
                     if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
                         operator_stack.Pop();
+                    }
+                    if (operator_stack.Count > 0 && operator_stack.Peek().All(char.IsDigit)) {
+                        rpn.Add(operator_stack.Pop());
                     }
                 }
             }

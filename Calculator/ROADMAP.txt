@@ -1,0 +1,2 @@
+﻿variable number of arguments for functions (maybe use a struct and an interface with string and struct)
+ab instead of a*b for multiplication

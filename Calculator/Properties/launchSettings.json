@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "(1+2+3)"
+      "commandLineArgs": "max(1,2)"
     }
   }
 }
