@@ -1,2 +1,2 @@
-﻿variable number of arguments for functions (maybe use a struct and an interface with string and struct)
+﻿wrong number of argument exception + function not found exception
 ab instead of a*b for multiplication

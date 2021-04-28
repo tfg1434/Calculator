@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "max(1,2)"
+      "commandLineArgs": "cos(15)-2"
     }
   }
 }

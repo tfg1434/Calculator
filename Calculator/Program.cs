@@ -9,7 +9,8 @@ namespace Calculator {
         static void Main(string[] args) {
             string equation = args[0];
             List<string> rpn = ShuntingYard(equation);
-            Console.WriteLine(Solve(rpn));
+            decimal a = Solve(rpn);
+            int b = 5;
         }
 
         static readonly string[] operators = { "+", "-", "*", "/", "^" };
@@ -29,10 +30,10 @@ namespace Calculator {
 
                     stack.Push(token switch {
                         "^" => DecimalEx.Pow(n2, n1).ToString(),
-                        "*" => (n1 * n2).ToString(),
-                        "/" => (n1 / n2).ToString(),
-                        "+" => (n1 + n2).ToString(),
-                        "-" => (n1 - n2).ToString(),
+                        "*" => (n2 * n1).ToString(),
+                        "/" => (n2 / n1).ToString(),
+                        "+" => (n2 + n1).ToString(),
+                        "-" => (n2 - n1).ToString(),
                         _ => throw new Exception("wtf")
                     });
 
@@ -48,7 +49,56 @@ namespace Calculator {
                         case "abs":
                             stack.Push(Math.Abs(decimal.Parse(stack.Pop())).ToString());
                             break;
-                        case 
+                        case "arccos":
+                            stack.Push(DecimalEx.ACos(decimal.Parse(stack.Pop())).ToString());
+                            break;
+                        case "darccos":
+                            stack.Push((DecimalEx.ACos(decimal.Parse(stack.Pop())) * 180 / DecimalEx.Pi).ToString());
+                            break;
+                        case "arcsin":
+                            stack.Push(DecimalEx.ASin(decimal.Parse(stack.Pop())).ToString());
+                            break;
+                        case "darcsin":
+                            stack.Push((DecimalEx.ASin(decimal.Parse(stack.Pop())) * 180 / DecimalEx.Pi).ToString());
+                            break;
+                        case "arctan":
+                            stack.Push(DecimalEx.ATan(decimal.Parse(stack.Pop())).ToString());
+                            break;
+                        case "darctan":
+                            stack.Push((DecimalEx.ATan(decimal.Parse(stack.Pop())) * 180 / DecimalEx.Pi).ToString());
+                            break;
+                        case "arctan2":
+                            stack.Push(DecimalEx.ATan2(decimal.Parse(stack.Pop()), decimal.Parse(stack.Pop())).ToString());
+                            break;
+                        case "darctan2":
+                            stack.Push((DecimalEx.ATan2(decimal.Parse(stack.Pop()), decimal.Parse(stack.Pop())) * 180 / DecimalEx.Pi).ToString());
+                            break;
+                        case "ceil":
+                            stack.Push(DecimalEx.Ceiling(decimal.Parse(stack.Pop())).ToString());
+                            break;
+                        case "clamp":
+                            //args backward because it's popped off backwards
+                            decimal max = decimal.Parse(stack.Pop());
+                            decimal min = decimal.Parse(stack.Pop());
+                            decimal val = decimal.Parse(stack.Pop());
+
+                            //Console.WriteLine($"val: {val}  min: {min}   max: {max}");
+                            stack.Push(Math.Clamp(val, min, max).ToString());
+                            break;
+                        case "cos":
+                            stack.Push(DecimalEx.Cos(decimal.Parse(stack.Pop())).ToString());
+                            break;
+                        case "dcos":
+                            stack.Push((DecimalEx.Cos(decimal.Parse(stack.Pop())) * 180 / DecimalEx.Pi).ToString());
+                            break;
+                        case "mod":
+                            decimal divisor = decimal.Parse(stack.Pop());
+                            val = decimal.Parse(stack.Pop());
+                            stack.Push((val % divisor).ToString());
+                            break;
+                        case "floor":
+                            stack.Push(Math.Floor(decimal.Parse(stack.Pop())).ToString());
+                            break;
                     }
                 }
             }
@@ -117,7 +167,7 @@ namespace Calculator {
                     if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
                         operator_stack.Pop();
                     }
-                    if (operator_stack.Count > 0 && operator_stack.Peek().All(char.IsDigit)) {
+                    if (operator_stack.Count > 0 && operator_stack.Peek().All(char.IsLetter)) {
                         rpn.Add(operator_stack.Pop());
                     }
                 }

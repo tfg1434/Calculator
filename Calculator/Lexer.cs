@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Calculator {
     class Lexer {
+        //make it be able to figure out difference between negative number and subtracting
+
+
         //split string into tokens
         //sin(max(22,3)/3*pi) => ["sin", "(", "max", "(", "22", ",", "3", ")", "/", "3", "*", "pi"]
 
@@ -34,9 +37,21 @@ namespace Calculator {
                 return substr;
 
             } else {
-                cursor_end++;
+                //handle negative numbers
+                if (x == '-' && (cursor_end == 0 || src[cursor_end - 1] is '(' or '^' or '*' or '/')) {
+                    //advance while num or one .
+                    cursor_end++;
+                    advance_while(char.IsDigit);
+                    if (!empty && src[cursor_end] == '.') {
+                        cursor_end++;
+                        advance_while(char.IsDigit);
+                    }
+                    return substr;
+                }
+
                 //fractional num (.01)
-                if (x == '.' && char.IsDigit(src[cursor_end])) {
+                cursor_end++;
+                if (x == '.' && !empty && char.IsDigit(src[cursor_end])) {
                     return substr;
                 } else {
                     return x.ToString();
