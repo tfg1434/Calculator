@@ -1,2 +1,3 @@
 ﻿wrong number of argument exception + function not found exception
 ab instead of a*b for multiplication
+constants

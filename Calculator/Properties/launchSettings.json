@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "cos(15)-2"
+      "commandLineArgs": "sin(pi*pi-1)"
     }
   }
 }
