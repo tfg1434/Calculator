@@ -30,6 +30,7 @@ namespace Calculator {
         private static Dictionary<string, decimal> constants = new() {
             ["e"] = DecimalEx.E,
             ["pi"] = DecimalEx.Pi,
+            ["tau"] = DecimalEx.Pi * 2,
         };
 
         public List<string> Parse() {
