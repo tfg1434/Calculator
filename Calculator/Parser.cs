@@ -5,13 +5,15 @@ using ExtensionMethods;
 using System.Text;
 using System.Threading.Tasks;
 using DecimalMath;
+using System.Text.RegularExpressions;
 
 namespace Calculator {
     class Parser {
         //parse a string into reverse polish notation
         private readonly Lexer lexer;
         private static readonly Dictionary<string, int> precedence = new() {
-            ["^"] = 4,
+            ["^"] = 5,
+            ["~"] = 4,
             ["*"] = 3,
             ["/"] = 3,
             ["+"] = 2,
@@ -21,12 +23,13 @@ namespace Calculator {
         private const int left_associative = 1;
         private static readonly Dictionary<string, int> associativity = new() {
             ["^"] = right_associative,
+            ["~"] = left_associative,
             ["*"] = left_associative,
             ["/"] = left_associative,
             ["+"] = left_associative,
             ["-"] = left_associative,
         };
-        private static readonly string[] operators = { "+", "-", "*", "/", "^" };
+        private static readonly string[] operators = { "+", "-", "*", "/", "^", "~" };
         private static Dictionary<string, decimal> constants = new() {
             ["e"] = DecimalEx.E,
             ["pi"] = DecimalEx.Pi,
@@ -39,6 +42,7 @@ namespace Calculator {
                 tokens.Push(lexer.Next());
             }
             tokens = tokens.Reverse();
+            lexer.Restart();
             return shunting_yard(tokens);
         }
 
@@ -113,8 +117,34 @@ namespace Calculator {
             return equation;
         }
 
+        //private string parenthesis_mult(string equation) {
+        //    /*
+        //    number -> open parenthesis 3(
+        //    close parenthesis -> number )3 || close parenthesis -> .
+        //    close parenthesis -> open parenthesis )(  
+        //    */
+
+        //    string prev_str = equation;
+        //    while (prev_str != equation) {
+        //        prev_str = equation;
+        //        //number -> open parenthesis 3(
+        //        equation = Regex.Replace(equation, "([0-9])[(]", "$1*(");
+        //        //close parenthesis -> number )3
+        //        equation = Regex.Replace(equation, "[)]([0-9])", "")
+        //    }
+            
+
+
+
+
+
+        //    Match close_num = Regex.Match(equation, "[)][0-9]");
+        //    Match close_open = Regex.Match(equation, "[)][(]");
+        //}
+
         public Parser(string str) {
-            lexer = new Lexer(replace_constants(str));
+            str = replace_constants(str);
+            lexer = new Lexer(str);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Calculator {
         static void Main(string[] args) {
             string equation = args[0];
             Parser parser = new(equation);
+            List<string> a = parser.Parse();
             Console.WriteLine(Solve(parser.Parse()));
         }
 
@@ -38,6 +39,11 @@ namespace Calculator {
                 } else {
                     //function
                     switch (token) {
+                        case "~":
+                            //negate
+                            //precedence doesn't matter here since rpn removes it
+                            stack.Push("-" + stack.Pop());
+                            break;
                         case "abs":
                             stack.Push(Math.Abs(decimal.Parse(stack.Pop())).ToString());
                             break;
@@ -143,6 +149,8 @@ namespace Calculator {
                         case "trunc":
                             stack.Push(Math.Truncate(decimal.Parse(stack.Pop())).ToString());
                             break;
+                        default:
+                            throw new Exception($"Unknown function token {token}");
                     }
                 }
             }

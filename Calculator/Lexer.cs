@@ -37,26 +37,19 @@ namespace Calculator {
                 return substr;
 
             } else {
-                //handle negative numbers
-                if (x == '-' && (cursor_end == 0 || src[cursor_end - 1] is '(' or '^' or '*' or '/')) {
-                    //advance while num or one .
-                    cursor_end++;
-                    advance_while(char.IsDigit);
-                    if (!empty && src[cursor_end] == '.') {
-                        cursor_end++;
-                        advance_while(char.IsDigit);
-                    }
-                    return substr;
-                }
-
                 //fractional num (.01)
                 cursor_end++;
                 if (x == '.' && !empty && char.IsDigit(src[cursor_end])) {
+                    advance_while(char.IsDigit);
                     return substr;
                 } else {
                     return x.ToString();
                 }
             }
+        }
+
+        public void Restart() {
+            cursor_begin = cursor_end = 0;
         }
 
         private void reset() {
