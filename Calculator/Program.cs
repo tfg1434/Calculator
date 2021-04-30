@@ -9,7 +9,6 @@ namespace Calculator {
         static void Main(string[] args) {
             string equation = args[0];
             Parser parser = new(equation);
-            List<string> a = parser.Parse();
             Console.WriteLine(Solve(parser.Parse()));
         }
 

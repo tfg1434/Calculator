@@ -39,7 +39,19 @@ namespace Calculator {
         public List<string> Parse() {
             Stack<string> tokens = new();
             while (!lexer.empty) {
-                tokens.Push(lexer.Next());
+                string next = lexer.Next();
+
+                //if (char.IsDigit(next[^1]) && tokens.Peek() == "(") {
+                //    tokens.Push(next);
+                //    tokens.Push("*");
+                //    //tokens.Push(lexer.Next());
+                //    continue;
+                //}
+
+                if (constants.ContainsKey(next))
+                    next = constants[next].ToString();
+
+                tokens.Push(next);
             }
             tokens = tokens.Reverse();
             lexer.Restart();
@@ -103,48 +115,19 @@ namespace Calculator {
             return rpn;
         }
 
-        private string replace_constants(string equation) {
-            foreach (KeyValuePair<string, decimal> constant in constants) {
-                while (equation.Contains(constant.Key)) {
-                    int index = equation.IndexOf(constant.Key);
-                    if ((index == 0 || index == equation.Length - constant.Key.Length) || (!char.IsLetter(equation[index - 1]) && !char.IsLetter(equation[index + constant.Key.Length]))) {
-                        equation = equation.Remove(index, constant.Key.Length);
-                        equation = equation.Insert(index, constant.Value.ToString());
-                    }
-                }
-            }
+        private string implicit_mult(string equation) {
+            //number -> open parenthesis 3(
+            equation = Regex.Replace(equation, "([0-9])[(]", "$1*(");
+            //close parenthesis -> number )3 || close parenthesis -> . ).01
+            equation = Regex.Replace(equation, "[)]([0-9|.])", ")*$1");
+            //close parenthesis -> open parenthesis
+            equation = Regex.Replace(equation, "[)][(]", ")*(");
 
             return equation;
         }
 
-        //private string parenthesis_mult(string equation) {
-        //    /*
-        //    number -> open parenthesis 3(
-        //    close parenthesis -> number )3 || close parenthesis -> .
-        //    close parenthesis -> open parenthesis )(  
-        //    */
-
-        //    string prev_str = equation;
-        //    while (prev_str != equation) {
-        //        prev_str = equation;
-        //        //number -> open parenthesis 3(
-        //        equation = Regex.Replace(equation, "([0-9])[(]", "$1*(");
-        //        //close parenthesis -> number )3
-        //        equation = Regex.Replace(equation, "[)]([0-9])", "")
-        //    }
-            
-
-
-
-
-
-        //    Match close_num = Regex.Match(equation, "[)][0-9]");
-        //    Match close_open = Regex.Match(equation, "[)][(]");
-        //}
-
         public Parser(string str) {
-            str = replace_constants(str);
-            lexer = new Lexer(str);
+            lexer = new Lexer(implicit_mult(str));
         }
     }
 }
