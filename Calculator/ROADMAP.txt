@@ -1,6 +1,4 @@
-﻿use ~ to negate so -2^4 correctly returns -16
-^ and () higher precedence ~
-negate the next number, except if it is a ^ expression or ()
+﻿(5)~2 returns -2 for some reason
 
 
 wrong number of argument exception + function not found exception

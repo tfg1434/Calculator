@@ -118,8 +118,8 @@ namespace Calculator {
         private string implicit_mult(string equation) {
             //number -> open parenthesis 3(
             equation = Regex.Replace(equation, "([0-9])[(]", "$1*(");
-            //close parenthesis -> number )3 || close parenthesis -> . ).01
-            equation = Regex.Replace(equation, "[)]([0-9|.])", ")*$1");
+            //close parenthesis -> number )3 || close parenthesis -> . ).01 || close parenthesis -> negate )~1
+            equation = Regex.Replace(equation, "[)]([0-9|.|~])", ")*$1");
             //close parenthesis -> open parenthesis
             equation = Regex.Replace(equation, "[)][(]", ")*(");
 
