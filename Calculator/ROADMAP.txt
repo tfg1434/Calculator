@@ -1,5 +1,4 @@
-﻿(5)~2 returns -2 for some reason
-
+﻿use - for negative in combineliketerms
 
 wrong number of argument exception + function not found exception
 3(1+2)

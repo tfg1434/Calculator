@@ -11,7 +11,7 @@ namespace Calculator {
     class Parser {
         //parse a string into reverse polish notation
         private readonly Lexer lexer;
-        private static readonly Dictionary<string, int> precedence = new() {
+        private readonly Dictionary<string, int> precedence = new() {
             ["^"] = 5,
             ["~"] = 4,
             ["*"] = 3,
@@ -21,7 +21,7 @@ namespace Calculator {
         };
         private const int right_associative = 0;
         private const int left_associative = 1;
-        private static readonly Dictionary<string, int> associativity = new() {
+        private readonly Dictionary<string, int> associativity = new() {
             ["^"] = right_associative,
             ["~"] = left_associative,
             ["*"] = left_associative,
@@ -29,11 +29,13 @@ namespace Calculator {
             ["+"] = left_associative,
             ["-"] = left_associative,
         };
-        private static readonly string[] operators = { "+", "-", "*", "/", "^", "~" };
-        private static Dictionary<string, decimal> constants = new() {
-            ["e"] = DecimalEx.E,
-            ["pi"] = DecimalEx.Pi,
-            ["tau"] = DecimalEx.Pi * 2,
+        private readonly string[] operators = { "+", "-", "*", "/", "^", "~" };
+        //constants/variables
+        //<string, string> so unary negate works ~
+        private Dictionary<string, string> constants = new() {
+            ["e"] = DecimalEx.E.ToString(),
+            ["pi"] = DecimalEx.Pi.ToString(),
+            ["tau"] = (DecimalEx.Pi * 2).ToString(),
         };
 
         public List<string> Parse() {
@@ -41,15 +43,15 @@ namespace Calculator {
             while (!lexer.empty) {
                 string next = lexer.Next();
 
-                //if (char.IsDigit(next[^1]) && tokens.Peek() == "(") {
-                //    tokens.Push(next);
-                //    tokens.Push("*");
-                //    //tokens.Push(lexer.Next());
-                //    continue;
-                //}
+                //constants and variables
+                if (constants.ContainsKey(next)) {
+                    next = constants[next];
 
-                if (constants.ContainsKey(next))
-                    next = constants[next].ToString();
+                    if (next.Contains("~")) {
+                        next = next.Replace("~", "");
+                        tokens.Push("~");
+                    }
+                }
 
                 tokens.Push(next);
             }
@@ -118,16 +120,19 @@ namespace Calculator {
         private string implicit_mult(string equation) {
             //number -> open parenthesis 3(
             equation = Regex.Replace(equation, "([0-9])[(]", "$1*(");
-            //close parenthesis -> number )3 || close parenthesis -> . ).01 || close parenthesis -> negate )~1
-            equation = Regex.Replace(equation, "[)]([0-9|.|~])", ")*$1");
+            //close parenthesis -> number )3 || close parenthesis -> . ).01
+            equation = Regex.Replace(equation, "[)]([0-9|.])", ")*$1");
             //close parenthesis -> open parenthesis
             equation = Regex.Replace(equation, "[)][(]", ")*(");
 
             return equation;
         }
 
-        public Parser(string str) {
+        public Parser(string str, Dictionary<string, string> variables) {
             lexer = new Lexer(implicit_mult(str));
+            foreach (KeyValuePair<string, string> variable in variables) {
+                constants.Add(variable.Key, variable.Value);
+            }
         }
     }
 }

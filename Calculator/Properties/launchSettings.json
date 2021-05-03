@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "(5)~1"
+      "commandLineArgs": "combineliketerms -5x^0-4x+x^2 x"
     }
   }
 }

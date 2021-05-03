@@ -3,16 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using ExtensionMethods;
 using DecimalMath;
+using System.Text.RegularExpressions;
 
 namespace Calculator {
     class Program {
         static void Main(string[] args) {
-            string equation = args[0];
-            Parser parser = new(equation);
-            Console.WriteLine(Solve(parser.Parse()));
+            string command = args[0];
+            string equation = args[1];
+
+            if (command == "eval") {
+                Dictionary<string, string> variables = new();
+                for (var i = 2; i < args.Length; i++) {
+                    //variable looks like a=5
+                    variables.Add(
+                        args[i].Split("=")[0],
+                        args[i].Split("=")[1]
+                    );
+                }
+
+                Parser parser = new(equation, variables);
+                Console.WriteLine(Eval(parser.Parse()));
+
+            } else if (command == "combineliketerms") {
+                string variable = args.ElementAtOrDefault(2);
+                if (string.IsNullOrEmpty(variable)) variable = "x";
+                CAS.CombineLikeTerms(equation, variable, out string print);
+                Console.WriteLine(print);
+            }
         }
 
-        static decimal Solve(List<string> rpn) {
+        static decimal Eval(List<string> rpn) {
             string[] operators = { "+", "-", "*", "/", "^" };
             Stack<string> stack = new();
 
@@ -156,7 +176,5 @@ namespace Calculator {
 
             return decimal.Parse(stack.Pop());
         }
-
-        
     }
 }
