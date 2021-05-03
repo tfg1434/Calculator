@@ -24,11 +24,15 @@ namespace Calculator {
                 Parser parser = new(equation, variables);
                 Console.WriteLine(Eval(parser.Parse()));
 
-            } else if (command == "combineliketerms") {
-                string variable = args.ElementAtOrDefault(2);
-                if (string.IsNullOrEmpty(variable)) variable = "x";
-                CAS.CombineLikeTerms(equation, variable, out string print);
-                Console.WriteLine(print);
+            } else if (command == "cas") {
+                switch (args[2]) {
+                    case "combineliketerms":
+                        string variable = args.ElementAtOrDefault(3);
+                        if (string.IsNullOrEmpty(variable)) variable = "x";
+                        CAS.CombineLikeTerms(equation, variable, out string print);
+                        Console.WriteLine(print);
+                        break;
+                }
             }
         }
 

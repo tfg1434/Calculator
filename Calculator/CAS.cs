@@ -30,6 +30,11 @@ namespace Calculator {
         }
 
         //ints only pls
+        public static string PolyFactor(string equation, string variable) {
+
+        }
+
+        //ints only pls
         public static (int coefficient, string like_term)[] CombineLikeTerms(string equation, string variable, out string print) {
             Dictionary<string, int> like_terms = new();
             (int coefficient, string term)[] uncombined = parse(equation, variable);
