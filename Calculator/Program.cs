@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 namespace Calculator {
     class Program {
         static void Main(string[] args) {
+            new CAS.Term(1, "2");
+
             string command = args[0];
             string equation = args[1];
 
@@ -27,11 +29,20 @@ namespace Calculator {
             } else if (command == "cas") {
                 switch (args[2]) {
                     case "combineliketerms":
-                        string variable = args.ElementAtOrDefault(3);
-                        if (string.IsNullOrEmpty(variable)) variable = "x";
-                        CAS.CombineLikeTerms(equation, variable, out string print);
-                        Console.WriteLine(print);
-                        break;
+                        {
+                            string variable = args.ElementAtOrDefault(3);
+                            if (string.IsNullOrEmpty(variable)) variable = "x";
+                            CAS.CombineLikeTerms(equation, variable, out string print);
+                            Console.WriteLine(print);
+                            break;
+                        }
+                    case "polyfactor":
+                        {
+                            string variable = args.ElementAtOrDefault(3);
+                            if (string.IsNullOrEmpty(variable)) variable = "x";
+                            CAS.PolyFactor(equation, variable, out _);
+                            break;
+                        }
                 }
             }
         }
