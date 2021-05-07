@@ -30,9 +30,7 @@ namespace Calculator {
                 switch (args[2]) {
                     case "combineliketerms":
                         {
-                            string variable = args.ElementAtOrDefault(3);
-                            if (string.IsNullOrEmpty(variable)) variable = "x";
-                            CAS.CombineLikeTerms(equation, variable, out string print);
+                            CAS.CombineLikeTerms(equation, out string print);
                             Console.WriteLine(print);
                             break;
                         }

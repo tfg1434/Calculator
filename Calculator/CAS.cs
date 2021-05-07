@@ -18,24 +18,53 @@ namespace Calculator {
             }
         }
 
-        //ints only pls
-        private static Term[] parse(string equation, string variable) {
-            // [+-]?[^+-]+ doesn't work, but try to make parse work for any \d<wildcards> pair
-            MatchCollection matches = Regex.Matches(equation, $@"([+-]?(?:(?:(?:\d+)?{variable}\^\d+)|(?:\d+{variable})|(?:\d+)|(?:{variable})))");
-            //test if it's a valid polynomial
+        //is polynomial with any amount of variables?
+        private static bool is_polynomial(string str, out MatchCollection matches) {
+            matches = Regex.Matches(str, @"([+-]?(?:(?:(?:\d+)?(?:[a-zA-Z]+(?:\^\d+)?)*)*|(?:\d+[a-zA-Z]*)|(?:\d+)|(?:[a-zA-Z])))");
+
             string test = "";
             foreach (Match match in matches)
                 test += match.Value;
-            if (test != equation)
+            if (test != str)
+                return false;
+
+            return true;
+        }
+
+        //is it a polynomial with a specific variable?
+        private static bool is_polynomial_1variable(string str, string variable, out MatchCollection matches) {
+            matches = Regex.Matches(str, $@"([+-]?(?:(?:(?:\d+)?{variable}\^\d+)|(?:\d+{variable})|(?:\d+)|(?:{variable})))");
+
+            string test = "";
+            foreach (Match match in matches)
+                test += match.Value;
+            if (test != str)
+                return false;
+
+            return true;
+        }
+
+        //ints only pls
+        private static Term[] parse(string equation) {
+            //[+-]?[^+-]+
+            //$@"([+-]?(?:(?:(?:\d+)?{variable}\^\d+)|(?:\d+{variable})|(?:\d+)|(?:{variable})))" SPECIFIC VARIABLE
+            //([+-]?(?:(?:(?:\d+)?(?:[a-zA-Z]+(?:\^\d+)?)*)*|(?:\d+[a-zA-Z]*)|(?:\d+)|(?:[a-zA-Z]))) FIRST REGEX
+            //test if it's a valid polynomial
+            if (!is_polynomial(equation, out MatchCollection matches))
                 throw new Exception("Invalid input");
 
-            var ret = new Term[matches.Count];
-            for (int i = 0; i < matches.Count; i++) {
+            var ret = new Term[matches.Count - 1];
+            for (int i = 0; i < ret.Length; i++) {
                 string match = matches[i].Value.Replace("+", "");
-                if (match.StartsWith(variable)) match = "1" + match;
-                else if (match.StartsWith("-" + variable)) 
+                if (!match.StartsWith("-") && !char.IsDigit(match[0])) match = "1" + match;
+                else if (match.StartsWith("-") && !char.IsDigit(match[1])) 
                     match = match.Insert(1, "1");
-                ret[i] = new Term(int.Parse(match.Split(variable)[0]), match.Remove(0, match.Split(variable)[0].Length));
+
+                int num = int.Parse(new string(match.SkipWhile(x => x == '-').TakeWhile(char.IsDigit).ToArray()));
+                if (match.StartsWith("-"))
+                    num *= -1;
+
+                ret[i] = new Term(num, match.Remove(0, num.ToString().Length));
             }
             return ret;
         }
@@ -61,7 +90,10 @@ namespace Calculator {
 
         //ints only pls
         public static void/*(int coefficient, string term)[]*/ PolyFactor(string equation, string variable, out string print) {
-            Term[] unfactored = parse(equation, variable);
+            if (!is_polynomial_1variable(equation, variable, out MatchCollection matches))
+                throw new Exception("Invalid input");
+
+            Term[] unfactored = parse(equation);
             sort_by_exponent(unfactored, variable);
 
 
@@ -70,9 +102,9 @@ namespace Calculator {
         }
 
         //ints only pls
-        public static Term[] CombineLikeTerms(string equation, string variable, out string print) {
+        public static Term[] CombineLikeTerms(string equation, out string print) {
             Dictionary<string, int> like_terms = new();
-            Term[] uncombined = parse(equation, variable);
+            Term[] uncombined = parse(equation);
             foreach (Term term in uncombined) {
                 if (like_terms.ContainsKey(term.term))
                     like_terms[term.term] += term.coefficient;
@@ -85,8 +117,6 @@ namespace Calculator {
             foreach (KeyValuePair<string, int> pair in like_terms) {
                 ret[i++] = new Term(pair.Value, pair.Key);
             }
-
-            sort_by_exponent(ret, variable);
 
             //out print
             print = "";
