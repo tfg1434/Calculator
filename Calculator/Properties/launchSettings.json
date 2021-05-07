@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "cas 3x^2a^3-5x^2+x^2 combineliketerms"
+      "commandLineArgs": "cas x^3-1 polyfactor x"
     }
   }
 }

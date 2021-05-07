@@ -18,6 +18,13 @@ namespace Calculator {
             }
         }
 
+        private static int power(string term, string variable) {
+            if (term.Contains("^"))
+                return int.Parse(term.Split("^")[1]);
+            else
+                return term == variable ? 1 : 0;
+        }
+
         //is polynomial with any amount of variables?
         private static bool is_polynomial(string str, out MatchCollection matches) {
             matches = Regex.Matches(str, @"([+-]?(?:(?:(?:\d+)?(?:[a-zA-Z]+(?:\^\d+)?)*)*|(?:\d+[a-zA-Z]*)|(?:\d+)|(?:[a-zA-Z])))");
@@ -71,16 +78,8 @@ namespace Calculator {
 
         private static void sort_by_exponent(Term[] array, string variable) {
             int comparer(Term t1, Term t2) {
-                int a = default;
-                if (t1.term.Contains("^"))
-                    a = int.Parse(t1.term.Split("^")[1]);
-                else
-                    a = t1.term == variable ? 1 : 0;
-                int b = default;
-                if (t2.term.Contains("^"))
-                    b = int.Parse(t2.term.Split("^")[1]);
-                else
-                    b = t2.term == variable ? 1 : 0;
+                int a = power(t1.term, variable);
+                int b = power(t2.term, variable);
 
                 return b - a;
             }
@@ -90,12 +89,22 @@ namespace Calculator {
 
         //ints only pls
         public static void/*(int coefficient, string term)[]*/ PolyFactor(string equation, string variable, out string print) {
-            if (!is_polynomial_1variable(equation, variable, out MatchCollection matches))
+            if (!is_polynomial_1variable(equation, variable, out _))
                 throw new Exception("Invalid input");
 
             Term[] unfactored = parse(equation);
             sort_by_exponent(unfactored, variable);
+            int max_exp = power(unfactored[0].term, variable);
+            int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
+            coefficients[0] = unfactored[0].coefficient;
 
+            for (var i = 0; i < coefficients.Length; i++) {
+                int index = Array.FindIndex(unfactored, t => power(t.term, variable) == max_exp - i);
+                if (index != -1)
+                    coefficients[i] = unfactored[index].coefficient;
+                else
+                    coefficients[i] = 0;
+            }
 
 
             print = "";
