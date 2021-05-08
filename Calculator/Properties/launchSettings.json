@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "cas x^2+5x+6 syntheticdiv -2 x"
+      "commandLineArgs": "cas 6+a^3-a syntheticdiv -2 a"
     }
   }
 }

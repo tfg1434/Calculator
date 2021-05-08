@@ -1,4 +1,3 @@
-﻿use - for negative in combineliketerms
+﻿return remainder when dividing
 
-wrong number of argument exception + function not found exception
-3(1+2)
+write a grammar!!!

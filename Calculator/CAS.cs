@@ -158,7 +158,7 @@ namespace Calculator {
                 string print_co = co switch {
                     -1 when ii != 0 => "-",
                     1 when ii != 0 => "+",
-                    _ => "+" + co.ToString(),
+                    _ => co.ToString()[0] == '-' ? co.ToString() : "+" + co.ToString(),
                 };
 
                 string append = ii switch {
