@@ -30,10 +30,9 @@ namespace Calculator {
             } else if (char.IsDigit(x)) {
                 advance_while(char.IsDigit);
                 //this instead of one lambda so you only get 1 .
-                if (!empty && src[cursor_end] == '.') {
-                    cursor_end++;
-                    advance_while(char.IsDigit);
-                }
+                if (empty || src[cursor_end] != '.') return substr;
+                cursor_end++;
+                advance_while(char.IsDigit);
                 return substr;
 
             } else {

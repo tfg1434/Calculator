@@ -8,7 +8,7 @@ using static Calculator.Solver;
 
 namespace Calculator {
     static class CAS {
-        public struct Term {
+        public readonly struct Term {
             public int coefficient { get; }
             public string term { get; }
 
@@ -33,10 +33,7 @@ namespace Calculator {
             string test = "";
             foreach (Match match in matches)
                 test += match.Value;
-            if (test != str)
-                return false;
-
-            return true;
+            return test == str;
         }
 
         //is it a polynomial with a specific variable?
@@ -46,10 +43,7 @@ namespace Calculator {
             string test = "";
             foreach (Match match in matches)
                 test += match.Value;
-            if (test != str)
-                return false;
-
-            return true;
+            return test == str;
         }
 
         //ints only pls
@@ -104,18 +98,37 @@ namespace Calculator {
             return cur;
         }
 
+        //you can infer powers from here since there are 0s
+        //last term is remainder (if not 0 error)
+        //consider adding an out print parameter to this and making it public
+        private static int[] synthetic_div(int zero, int[] coefficients) {
+            zero = -zero;
+            //actually use zero lol
+
+            var ans = new int[coefficients.Length - 1]; //-1 because last term is remainder
+            ans[0] = coefficients[0];
+
+            for (int i = 1; i < ans.Length; i++) {
+                ans[i] = coefficients[i] - ans[i - 1] * zero;
+            }
+            int rem = coefficients[^1] - ans[^1];
+
+
+            return new int[5];
+        }
+
         //ints only pls
         public static void/*(int coefficient, string term)[]*/ PolyFactor(string equation, string variable, out string print) {
             if (!is_polynomial_1variable(equation, variable, out _))
                 throw new Exception("Invalid input");
 
-            Term[] unfactored = parse(equation);
+            Term[] unfactored = CombineLikeTerms(equation, out _);
             sort_by_exponent(unfactored, variable);
 
             #region extract coefficients
             int max_exp = power(unfactored[0].term, variable);
             int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
-            coefficients[0] = unfactored[0].coefficient;
+            //coefficients[0] = unfactored[0].coefficient;
 
             for (var i = 0; i < coefficients.Length; i++) {
                 int index = Array.FindIndex(unfactored, t => power(t.term, variable) == max_exp - i);
@@ -127,6 +140,7 @@ namespace Calculator {
             #endregion
 
             int a = factor_theorem(equation, variable);
+            int[] b = synthetic_div(a, coefficients);
             print = "";
         }
 

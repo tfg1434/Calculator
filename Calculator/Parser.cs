@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using ExtensionMethods;
 using System.Text;
@@ -32,7 +33,7 @@ namespace Calculator {
         private readonly string[] operators = { "+", "-", "*", "/", "^", "~" };
         //constants/variables
         //<string, string> so unary negate works ~
-        private Dictionary<string, string> constants = new() {
+        private readonly Dictionary<string, string> constants = new() {
             ["e"] = DecimalEx.E.ToString(),
             ["pi"] = DecimalEx.Pi.ToString(),
             ["tau"] = (DecimalEx.Pi * 2).ToString(),
@@ -48,7 +49,7 @@ namespace Calculator {
                 if (constants.ContainsKey(next)) {
                     next = constants[next];
 
-                    if (tokens.Peek().All(char.IsDigit)) {
+                    if (tokens.Count > 0 && tokens.Peek().All(char.IsDigit)) {
                         tokens.Push("*");
                     }
 
@@ -88,42 +89,45 @@ namespace Calculator {
 
                     operator_stack.Push(token);
 
-                } else if (token == "(") {
-                    operator_stack.Push(token);
+                } else switch (token) {
+                    case "(":
+                        operator_stack.Push(token);
+                        break;
+                    case ")": {
+                        while (operator_stack.Count > 0 && operator_stack.Peek() != "(") {
+                            rpn.Add(operator_stack.Pop());
+                        }
+                        //If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
+                        if (operator_stack.Count == 0) {
+                            throw new Exception("Mismatched parenthesis");
+                        }
 
-                } else if (token == ")") {
-                    while (operator_stack.Count > 0 && operator_stack.Peek() != "(") {
-                        rpn.Add(operator_stack.Pop());
-                    }
-                    //If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
-                    if (operator_stack.Count == 0) {
-                        throw new Exception("Mismatched parenthesis");
-                    }
+                        if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
+                            operator_stack.Pop();
+                        }
+                        if (operator_stack.Count > 0 && operator_stack.Peek().All(char.IsLetter)) {
+                            rpn.Add(operator_stack.Pop());
+                        }
 
-                    if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
-                        operator_stack.Pop();
-                    }
-                    if (operator_stack.Count > 0 && operator_stack.Peek().All(char.IsLetter)) {
-                        rpn.Add(operator_stack.Pop());
+                        break;
                     }
                 }
             }
 
-            if (tokens.Count == 0) {
-                while (operator_stack.Count > 0) {
-                    //If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses.
-                    if (operator_stack.Peek() == "(" || operator_stack.Peek() == ")") {
-                        throw new Exception("Mismatched Parentheses");
-                    }
-
-                    rpn.Add(operator_stack.Pop());
+            if (tokens.Count != 0) return rpn;
+            while (operator_stack.Count > 0) {
+                //If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses.
+                if (operator_stack.Peek() == "(" || operator_stack.Peek() == ")") {
+                    throw new Exception("Mismatched Parentheses");
                 }
+
+                rpn.Add(operator_stack.Pop());
             }
 
             return rpn;
         }
 
-        private string implicit_mult(string equation) {
+        private static string implicit_mult(string equation) {
             //number -> open parenthesis 3(
             equation = Regex.Replace(equation, "([0-9])[(]", "$1*(");
             //close parenthesis -> number )3 || close parenthesis -> . ).01

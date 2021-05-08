@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Calculator {
                         "/" => (n2 / n1).ToString(),
                         "+" => (n2 + n1).ToString(),
                         "-" => (n2 - n1).ToString(),
-                        _ => throw new Exception("wtf")
+                        _ => throw new Exception("wtf"),
                     });
 
                 } else {
