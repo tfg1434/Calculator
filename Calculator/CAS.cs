@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using static Calculator.Solver;
 
 namespace Calculator {
     static class CAS {
@@ -87,6 +88,22 @@ namespace Calculator {
             Array.Sort(array, comparer);
         }
 
+        //applies factor theorem and returns a in x - a
+        private static int factor_theorem(string equation, string variable) {
+            //*= -1 +- 1
+            int cur = 0;
+            Dictionary<string, string> sub = new() {
+                [variable] = cur.ToString(),
+            };
+
+            while (Solve(equation, sub) != 0) {
+                cur = -cur + (cur >= 0 ? 1 : -1);
+                sub[variable] = cur.ToString();
+            }
+
+            return cur;
+        }
+
         //ints only pls
         public static void/*(int coefficient, string term)[]*/ PolyFactor(string equation, string variable, out string print) {
             if (!is_polynomial_1variable(equation, variable, out _))
@@ -94,6 +111,8 @@ namespace Calculator {
 
             Term[] unfactored = parse(equation);
             sort_by_exponent(unfactored, variable);
+
+            #region extract coefficients
             int max_exp = power(unfactored[0].term, variable);
             int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
             coefficients[0] = unfactored[0].coefficient;
@@ -105,8 +124,9 @@ namespace Calculator {
                 else
                     coefficients[i] = 0;
             }
+            #endregion
 
-
+            int a = factor_theorem(equation, variable);
             print = "";
         }
 
