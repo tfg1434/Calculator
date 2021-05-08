@@ -97,7 +97,7 @@ namespace Calculator {
             };
 
             while (Solve(equation, sub) != 0) {
-                cur = -cur + (cur >= 0 ? 1 : -1);
+                cur = -(cur + (cur >= 0 ? 1 : 0));
                 sub[variable] = cur.ToString();
             }
 

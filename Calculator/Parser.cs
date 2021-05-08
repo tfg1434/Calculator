@@ -40,12 +40,17 @@ namespace Calculator {
 
         public List<string> Parse() {
             Stack<string> tokens = new();
+
             while (!lexer.empty) {
                 string next = lexer.Next();
 
                 //constants and variables
                 if (constants.ContainsKey(next)) {
                     next = constants[next];
+
+                    if (tokens.Peek().All(char.IsDigit)) {
+                        tokens.Push("*");
+                    }
 
                     if (next.Contains("~")) {
                         next = next.Replace("~", "");
@@ -56,6 +61,7 @@ namespace Calculator {
                 tokens.Push(next);
             }
             tokens = tokens.Reverse();
+
             lexer.Restart();
             return shunting_yard(tokens);
         }
