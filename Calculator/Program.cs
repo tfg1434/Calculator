@@ -28,21 +28,26 @@ namespace Calculator {
                 }
                 case "cas":
                     switch (args[2]) {
-                        case "combineliketerms":
+                        case "combineliketerms": {
                             CAS.CombineLikeTerms(equation, out string print);
                             Console.WriteLine(print);
                             break;
+                        }
+                            
                         case "polyfactor": {
                             string variable = args.ElementAtOrDefault(3);
-                            if (string.IsNullOrEmpty(variable)) variable = "x";
+                            if (string.IsNullOrEmpty(variable)) 
+                                variable = "x";
                             CAS.PolyFactor(equation, variable, out _);
                             break;
                         }
                         case "syntheticdiv": {
                             int zero = int.Parse(args[3]);
                             string variable = args.ElementAtOrDefault(4);
-                            if (string.IsNullOrEmpty(variable)) variable = "x";
-                            Console.WriteLine(CAS.SyntheticDiv(equation, variable, zero));
+                            if (string.IsNullOrEmpty(variable))
+                                variable = "x";
+                            string print = CAS.SyntheticDiv(equation, variable, zero, out int rem);
+                            Console.WriteLine($"{print} | remainder: {rem}");
                             break;
                         }
                     }

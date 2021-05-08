@@ -113,8 +113,6 @@ namespace Calculator {
                 ans[i] = coefficients[i] + ans[i - 1] * zero;
             }
             rem = coefficients[^1] + ans[^1] * zero;
-            if (rem != 0)
-                throw new Exception("Not dividable!");
 
             return ans;
         }
@@ -136,13 +134,14 @@ namespace Calculator {
         }
 
         //public version (returns a string to print)
-        public static string SyntheticDiv(string equation, string variable, int zero) {
+        public static string SyntheticDiv(string equation, string variable, int zero, out int rem) {
             if (!is_polynomial_1variable(equation, variable, out _))
                 throw new Exception("Invalid input");
             Term[] terms = CombineLikeTerms(equation, out _);
             sort_by_exponent(terms, variable);
             int[] coefficients = get_coefficients(terms, variable);
-            int[] ans = synthetic_div(zero, coefficients, variable, out _);
+            int[] ans = synthetic_div(zero, coefficients, variable, out int remainder);
+            rem = remainder;
 
 
             #region print friendly form
@@ -167,9 +166,6 @@ namespace Calculator {
                     0 => print_co,
                     _ => throw new Exception("wtf"),
                 };
-
-                //if (append[0] != '-' && str.Length > 0)
-                //    append = "+" + append;
 
                 str.Append(append);
             }
@@ -205,7 +201,9 @@ namespace Calculator {
             #endregion
 
             int zero = factor_theorem(equation, variable);
-            int[] b = synthetic_div(zero, coefficients, variable, out _);
+            int[] b = synthetic_div(zero, coefficients, variable, out int rem);
+            if (rem != 0)
+                throw new Exception("Not factorable!");
             print = "";
         }
 
