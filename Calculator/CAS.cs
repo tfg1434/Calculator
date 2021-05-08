@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
@@ -101,20 +102,83 @@ namespace Calculator {
         //you can infer powers from here since there are 0s
         //last term is remainder (if not 0 error)
         //consider adding an out print parameter to this and making it public
-        private static int[] synthetic_div(int zero, int[] coefficients) {
-            zero = -zero;
+        private static int[] synthetic_div(int zero, int[] coefficients, string variable, out int rem) {
+            //zero = -zero;
             //actually use zero lol
 
             var ans = new int[coefficients.Length - 1]; //-1 because last term is remainder
             ans[0] = coefficients[0];
 
             for (int i = 1; i < ans.Length; i++) {
-                ans[i] = coefficients[i] - ans[i - 1] * zero;
+                ans[i] = coefficients[i] + ans[i - 1] * zero;
             }
-            int rem = coefficients[^1] - ans[^1];
+            rem = coefficients[^1] + ans[^1] * zero;
+            if (rem != 0)
+                throw new Exception("Not dividable!");
+
+            return ans;
+        }
+
+        private static int[] get_coefficients(Term[] terms, string variable) {
+            sort_by_exponent(terms, variable);
+            int max_exp = power(terms[0].term, variable);
+            int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
+
+            for (var i = 0; i < coefficients.Length; i++) {
+                int index = Array.FindIndex(terms, t => power(t.term, variable) == max_exp - i);
+                if (index != -1)
+                    coefficients[i] = terms[index].coefficient;
+                else
+                    coefficients[i] = 0;
+            }
+
+            return coefficients;
+        }
+
+        //public version (returns a string to print)
+        public static string SyntheticDiv(string equation, string variable, int zero) {
+            if (!is_polynomial_1variable(equation, variable, out _))
+                throw new Exception("Invalid input");
+            Term[] terms = CombineLikeTerms(equation, out _);
+            sort_by_exponent(terms, variable);
+            int[] coefficients = get_coefficients(terms, variable);
+            int[] ans = synthetic_div(zero, coefficients, variable, out _);
 
 
-            return new int[5];
+            #region print friendly form
+
+            StringBuilder str = new();
+            int ii = ans.Length;
+            foreach (int co in ans) {
+                ii--;
+
+                if (co == 0)
+                    continue;
+
+                string print_co = co switch {
+                    -1 when ii != 0 => "-",
+                    1 when ii != 0 => "+",
+                    _ => "+" + co.ToString(),
+                };
+
+                string append = ii switch {
+                    > 1 => $"{print_co}{variable}^{ii}",
+                    1 => $"{print_co}{variable}",
+                    0 => print_co,
+                    _ => throw new Exception("wtf"),
+                };
+
+                //if (append[0] != '-' && str.Length > 0)
+                //    append = "+" + append;
+
+                str.Append(append);
+            }
+
+            if (str[0] == '+')
+                str = str.Remove(0, 1);
+            #endregion
+
+            return str.ToString();
         }
 
         //ints only pls
@@ -125,22 +189,23 @@ namespace Calculator {
             Term[] unfactored = CombineLikeTerms(equation, out _);
             sort_by_exponent(unfactored, variable);
 
+            int[] coefficients = get_coefficients(unfactored, variable);
             #region extract coefficients
-            int max_exp = power(unfactored[0].term, variable);
-            int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
-            //coefficients[0] = unfactored[0].coefficient;
+            //int max_exp = power(unfactored[0].term, variable);
+            //int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
+            ////coefficients[0] = unfactored[0].coefficient;
 
-            for (var i = 0; i < coefficients.Length; i++) {
-                int index = Array.FindIndex(unfactored, t => power(t.term, variable) == max_exp - i);
-                if (index != -1)
-                    coefficients[i] = unfactored[index].coefficient;
-                else
-                    coefficients[i] = 0;
-            }
+            //for (var i = 0; i < coefficients.Length; i++) {
+            //    int index = Array.FindIndex(unfactored, t => power(t.term, variable) == max_exp - i);
+            //    if (index != -1)
+            //        coefficients[i] = unfactored[index].coefficient;
+            //    else
+            //        coefficients[i] = 0;
+            //}
             #endregion
 
-            int a = factor_theorem(equation, variable);
-            int[] b = synthetic_div(a, coefficients);
+            int zero = factor_theorem(equation, variable);
+            int[] b = synthetic_div(zero, coefficients, variable, out _);
             print = "";
         }
 

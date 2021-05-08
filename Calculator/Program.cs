@@ -32,11 +32,17 @@ namespace Calculator {
                             CAS.CombineLikeTerms(equation, out string print);
                             Console.WriteLine(print);
                             break;
-                        case "polyfactor":
-                        {
+                        case "polyfactor": {
                             string variable = args.ElementAtOrDefault(3);
                             if (string.IsNullOrEmpty(variable)) variable = "x";
                             CAS.PolyFactor(equation, variable, out _);
+                            break;
+                        }
+                        case "syntheticdiv": {
+                            int zero = int.Parse(args[3]);
+                            string variable = args.ElementAtOrDefault(4);
+                            if (string.IsNullOrEmpty(variable)) variable = "x";
+                            Console.WriteLine(CAS.SyntheticDiv(equation, variable, zero));
                             break;
                         }
                     }
