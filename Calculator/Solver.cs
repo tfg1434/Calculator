@@ -149,7 +149,7 @@ namespace Calculator {
         }
 
         public static decimal Solve(string equation, Dictionary<string, string> variables) {
-            Parser parser = new(equation, variables);
+            Parser parser = new(equation, variables) { NegatePrecedence = 6 };
             return eval(parser.Parse());
         }
     }

@@ -84,25 +84,31 @@ namespace Calculator {
         }
 
         //applies factor theorem and returns a in x - a
-        private static int factor_theorem(string equation, string variable) {
+        private static int factor_theorem(string equation, string variable, out bool possible) {
             //*= -1 +- 1
             int cur = 0;
             Dictionary<string, string> sub = new() {
-                [variable] = cur.ToString(),
+                [variable] = cur.ToString().Replace("-", "~"),
             };
 
             while (Solve(equation, sub) != 0) {
                 cur = -(cur + (cur >= 0 ? 1 : 0));
-                sub[variable] = cur.ToString();
+                sub[variable] = cur.ToString().Replace("-", "~");
+
+                if (cur > 9999) {
+                    possible = false;
+                    return 0;
+                }
             }
 
+            possible = true;
             return cur;
         }
 
         //you can infer powers from here since there are 0s
         //last term is remainder (if not 0 error)
         //consider adding an out print parameter to this and making it public
-        private static int[] synthetic_div(int zero, int[] coefficients, string variable, out int rem) {
+        private static int[] synthetic_div(int zero, int[] coefficients, out int rem) {
             //zero = -zero;
             //actually use zero lol
 
@@ -133,22 +139,12 @@ namespace Calculator {
             return coefficients;
         }
 
-        //public version (returns a string to print)
-        public static string SyntheticDiv(string equation, string variable, int zero, out int rem) {
-            if (!is_polynomial_1variable(equation, variable, out _))
-                throw new Exception("Invalid input");
-            Term[] terms = CombineLikeTerms(equation, out _);
-            sort_by_exponent(terms, variable);
-            int[] coefficients = get_coefficients(terms, variable);
-            int[] ans = synthetic_div(zero, coefficients, variable, out int remainder);
-            rem = remainder;
-
-
-            #region print friendly form
-
+        //so that i can use Solve with an int[]
+        //[1, 5, 6] => x^2+5x+6
+        private static string int_arr_to_str(int[] array, string variable) {
             StringBuilder str = new();
-            int ii = ans.Length;
-            foreach (int co in ans) {
+            int ii = array.Length;
+            foreach (int co in array) {
                 ii--;
 
                 if (co == 0)
@@ -172,13 +168,25 @@ namespace Calculator {
 
             if (str[0] == '+')
                 str = str.Remove(0, 1);
-            #endregion
 
             return str.ToString();
         }
 
+        //public version (returns a string to print)
+        public static string SyntheticDiv(string equation, string variable, int zero, out int rem) {
+            if (!is_polynomial_1variable(equation, variable, out _))
+                throw new Exception("Invalid input");
+            Term[] terms = CombineLikeTerms(equation, out _);
+            sort_by_exponent(terms, variable);
+            int[] coefficients = get_coefficients(terms, variable);
+            int[] ans = synthetic_div(zero, coefficients, out int remainder);
+            rem = remainder;
+
+            return int_arr_to_str(ans, variable);
+        }
+
         //ints only pls
-        public static void/*(int coefficient, string term)[]*/ PolyFactor(string equation, string variable, out string print) {
+        public static string PolyFactor(string equation, string variable) {
             if (!is_polynomial_1variable(equation, variable, out _))
                 throw new Exception("Invalid input");
 
@@ -186,25 +194,36 @@ namespace Calculator {
             sort_by_exponent(unfactored, variable);
 
             int[] coefficients = get_coefficients(unfactored, variable);
-            #region extract coefficients
-            //int max_exp = power(unfactored[0].term, variable);
-            //int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
-            ////coefficients[0] = unfactored[0].coefficient;
 
-            //for (var i = 0; i < coefficients.Length; i++) {
-            //    int index = Array.FindIndex(unfactored, t => power(t.term, variable) == max_exp - i);
-            //    if (index != -1)
-            //        coefficients[i] = unfactored[index].coefficient;
-            //    else
-            //        coefficients[i] = 0;
-            //}
-            #endregion
+            int zero = factor_theorem(equation, variable, out _);
 
-            int zero = factor_theorem(equation, variable);
-            int[] b = synthetic_div(zero, coefficients, variable, out int rem);
+            //looks like x^2+5x+6 => x+3 => null
+            int[] curr_equation = synthetic_div(zero, coefficients, out int rem);
+            //looks like (x+3) => (x+3)(x+2)
+            string ans = $"({variable}{(-zero < 0 ? -zero : "+" + -zero)})";
             if (rem != 0)
                 throw new Exception("Not factorable!");
-            print = "";
+
+            bool broke = false;
+            while (true) {
+                //factor theorem will break if it's not possible
+                zero = factor_theorem(int_arr_to_str(curr_equation, variable), variable, out bool possible);
+                if (!possible) {
+                    broke = true;
+                    break;
+                }
+                curr_equation = synthetic_div(zero, curr_equation, out _);
+                ans += $"({variable}{(-zero < 0 ? -zero : "+" + -zero)})";
+
+                if (curr_equation.Length == 0)
+                    break;
+            }
+            //TODO: if it's not 0 add the term (x^2+1) for example
+            if (broke) {
+                ans += $"({int_arr_to_str(curr_equation, variable)})";
+            }
+
+            return ans;
         }
 
         //ints only pls

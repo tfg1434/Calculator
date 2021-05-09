@@ -38,7 +38,7 @@ namespace Calculator {
                             string variable = args.ElementAtOrDefault(3);
                             if (string.IsNullOrEmpty(variable)) 
                                 variable = "x";
-                            CAS.PolyFactor(equation, variable, out _);
+                            Console.WriteLine(CAS.PolyFactor(equation, variable));
                             break;
                         }
                         case "syntheticdiv": {

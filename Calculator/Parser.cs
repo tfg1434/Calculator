@@ -39,11 +39,24 @@ namespace Calculator {
             ["tau"] = (DecimalEx.Pi * 2).ToString(),
         };
 
+        private readonly int _negate_precedence = -4;
+        public int NegatePrecedence {
+            get => _negate_precedence;
+            init {
+                precedence["~"] = value;
+                _negate_precedence = value;
+            }
+        }
+
         public List<string> Parse() {
             Stack<string> tokens = new();
 
             while (!lexer.empty) {
                 string next = lexer.Next();
+
+                //if (constants["a"] == "~2") {
+                //    int breakpoint = 2;
+                //}
 
                 //constants and variables
                 if (constants.ContainsKey(next)) {
