@@ -109,9 +109,6 @@ namespace Calculator {
         //last term is remainder (if not 0 error)
         //consider adding an out print parameter to this and making it public
         private static int[] synthetic_div(int zero, int[] coefficients, out int rem) {
-            //zero = -zero;
-            //actually use zero lol
-
             var ans = new int[coefficients.Length - 1]; //-1 because last term is remainder
             ans[0] = coefficients[0];
 
@@ -215,10 +212,9 @@ namespace Calculator {
                 curr_equation = synthetic_div(zero, curr_equation, out _);
                 ans += $"({variable}{(-zero < 0 ? -zero : "+" + -zero)})";
 
-                if (curr_equation.Length == 0)
+                if (curr_equation.Length > 0 && curr_equation[0] == 1)
                     break;
             }
-            //TODO: if it's not 0 add the term (x^2+1) for example
             if (broke) {
                 ans += $"({int_arr_to_str(curr_equation, variable)})";
             }
