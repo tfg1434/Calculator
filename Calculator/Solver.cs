@@ -148,9 +148,6 @@ namespace Calculator {
             return decimal.Parse(stack.Pop());
         }
 
-        public static decimal Solve(string equation, Dictionary<string, string> variables) {
-            Parser parser = new(equation, variables);
-            return eval(parser.Parse());
-        }
+        public static decimal Solve(string equation, Dictionary<string, string> variables) => eval(Parser.Parse(equation, variables));
     }
 }

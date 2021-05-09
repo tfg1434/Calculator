@@ -4,6 +4,7 @@ using System.Linq;
 using ExtensionMethods;
 using DecimalMath;
 using System.Text.RegularExpressions;
+using System.Threading;
 using static Calculator.Solver;
 
 namespace Calculator {
@@ -51,7 +52,9 @@ namespace Calculator {
                             if (string.IsNullOrEmpty(variable)) 
                                 variable = "x";
                             Console.WriteLine(CAS.PolyFactor(equation, variable));
+
                             break;
+
                         }
                         case "syntheticdiv": {
                             /*

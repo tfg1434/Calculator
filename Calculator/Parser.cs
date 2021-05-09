@@ -9,10 +9,9 @@ using DecimalMath;
 using System.Text.RegularExpressions;
 
 namespace Calculator {
-    class Parser {
+    static class Parser {
         //parse a string into reverse polish notation
-        private readonly Lexer lexer;
-        private readonly Dictionary<string, int> precedence = new() {
+        private static readonly Dictionary<string, int> precedence = new() {
             ["^"] = 5,
             ["~"] = 4,
             ["*"] = 3,
@@ -33,45 +32,47 @@ namespace Calculator {
         private static readonly string[] operators = { "+", "-", "*", "/", "^", "~" };
         //constants/variables
         //<string, string> so unary negate works ~
-        private readonly Dictionary<string, string> constants = new() {
+        private static readonly Dictionary<string, string> constants = new() {
             ["e"] = DecimalEx.E.ToString(),
             ["pi"] = DecimalEx.Pi.ToString(),
             ["tau"] = (DecimalEx.Pi * 2).ToString(),
         };
 
-        public List<string> Parse() {
-            Stack<string> tokens = new();
+        private static Dictionary<string, string> variables_constants = new(constants);
 
-            while (!lexer.empty) {
-                string next = lexer.Next();
+        public static List<string> Parse(string equation, Dictionary<string, string> variables) {
+            foreach ((string key, string value) in variables)
+                variables_constants[key] = value;
 
-                //if (constants["a"] == "~2") {
-                //    int breakpoint = 2;
-                //}
+            Stack<string> tokens = Lexer.Lex(implicit_mult(equation));
+
+
+            foreach (string token in tokens) {
+                string str = token;
 
                 //constants and variables
-                if (constants.ContainsKey(next)) {
-                    next = constants[next];
+                if (variables_constants.ContainsKey(str)) {
+                    str = variables_constants[str];
 
                     if (tokens.Count > 0 && tokens.Peek().All(char.IsDigit)) {
                         tokens.Push("*");
                     }
 
-                    if (next.Contains("~")) {
-                        next = next.Replace("~", "");
+                    if (str.Contains("~")) {
+                        str = str.Replace("~", "");
                         tokens.Push("~");
                     }
                 }
 
-                tokens.Push(next);
+                tokens.Push(str);
             }
             tokens = tokens.Reverse();
+            variables_constants = new Dictionary<string, string>(constants);
 
-            lexer.Restart();
             return shunting_yard(tokens);
         }
 
-        private List<string> shunting_yard(Stack<string> tokens) {
+        private static List<string> shunting_yard(Stack<string> tokens) {
             Stack<string> operator_stack = new();
             List<string> rpn = new();
 
@@ -140,13 +141,6 @@ namespace Calculator {
             equation = Regex.Replace(equation, "[)][(]", ")*(");
 
             return equation;
-        }
-
-        public Parser(string str, Dictionary<string, string> variables) {
-            lexer = new Lexer(implicit_mult(str));
-            foreach ((string key, string value) in variables) {
-                constants.Add(key, value);
-            }
         }
     }
 }

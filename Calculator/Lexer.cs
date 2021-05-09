@@ -5,22 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Calculator {
-    class Lexer {
-        //make it be able to figure out difference between negative number and subtracting
+    //splits string into tokens
+    //sin(max(22,3)/3*pi) => ["sin", "(", "max", "(", "22", ",", "3", ")", "/", "3", "*", "pi"]
+    static class Lexer {
+        private static string src;
+        private static int cursor_begin;
+        private static int cursor_end;
+        private static bool empty => cursor_end >= src.Length;
+        private static string substr => src[cursor_begin..cursor_end];
 
-
-        //split string into tokens
-        //sin(max(22,3)/3*pi) => ["sin", "(", "max", "(", "22", ",", "3", ")", "/", "3", "*", "pi"]
-
-        private readonly string src;
-        private int cursor_begin;
-        private int cursor_end;
-        public bool empty => cursor_end >= src.Length;
-        private string substr => src[cursor_begin..cursor_end];
-
-        //return next token
-        //override the for loop and return next()
-        public string Next() {
+        private static string next() {
             reset();
             char x = src[cursor_end];
             if (char.IsLetter(x)) {
@@ -41,21 +35,22 @@ namespace Calculator {
                 if (x == '.' && !empty && char.IsDigit(src[cursor_end])) {
                     advance_while(char.IsDigit);
                     return substr;
-                } else {
-                    return x.ToString();
                 }
+
+                return x.ToString();
             }
         }
 
-        public void Restart() {
+        private static void restart() {
             cursor_begin = cursor_end = 0;
+            src = "";
         }
 
-        private void reset() {
+        private static void reset() {
             cursor_begin = cursor_end;
         }
 
-        private void advance_while(Predicate<char> p) {
+        private static void advance_while(Predicate<char> p) {
             while (!empty) {
                 if (p(src[cursor_end])) {
                     cursor_end++;
@@ -67,10 +62,14 @@ namespace Calculator {
             }
         }
 
-        public Lexer(string src) {
-            this.src = src;
-            cursor_begin = 0;
-            cursor_end = cursor_begin;
+        public static Stack<string> Lex(string src) {
+            Stack<string> stack = new();
+            while (!empty) {
+                stack.Push(next());
+            }
+
+            restart();
+            return stack;
         }
     }
 }
