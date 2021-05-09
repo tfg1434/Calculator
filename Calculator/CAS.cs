@@ -23,8 +23,8 @@ namespace Calculator {
         private static int power(string term, string variable) {
             if (term.Contains("^"))
                 return int.Parse(term.Split("^")[1]);
-            else
-                return term == variable ? 1 : 0;
+
+            return term == variable ? 1 : 0;
         }
 
         //is polynomial with any amount of variables?
@@ -47,7 +47,6 @@ namespace Calculator {
             return test == str;
         }
 
-        //ints only pls
         private static Term[] parse(string equation) {
             //[+-]?[^+-]+
             //$@"([+-]?(?:(?:(?:\d+)?{variable}\^\d+)|(?:\d+{variable})|(?:\d+)|(?:{variable})))" SPECIFIC VARIABLE
@@ -83,17 +82,19 @@ namespace Calculator {
             Array.Sort(array, comparer);
         }
 
-        //applies factor theorem and returns a in x - a
-        private static int factor_theorem(string equation, string variable, out bool possible) {
+        private static int get_factor(string equation, string variable, out bool possible) {
             //*= -1 +- 1
             int cur = 0;
-            Dictionary<string, string> sub = new() {
-                [variable] = cur.ToString().Replace("-", "~"),
-            };
+            //Dictionary<string, string> sub = new() {
+            //    [variable] = cur.ToString()//.Replace("-", "~"),
+            //};
 
-            while (Solve(equation, sub) != 0) {
+            int rem = 1;
+            while (rem != 0) {
                 cur = -(cur + (cur >= 0 ? 1 : 0));
-                sub[variable] = cur.ToString().Replace("-", "~");
+                //sub[variable] = cur.ToString();//.Replace("-", "~");
+                SyntheticDiv(equation, variable, cur, out int rem_);
+                rem = rem_;
 
                 if (cur > 9999) {
                     possible = false;
@@ -105,9 +106,6 @@ namespace Calculator {
             return cur;
         }
 
-        //you can infer powers from here since there are 0s
-        //last term is remainder (if not 0 error)
-        //consider adding an out print parameter to this and making it public
         private static int[] synthetic_div(int zero, int[] coefficients, out int rem) {
             var ans = new int[coefficients.Length - 1]; //-1 because last term is remainder
             ans[0] = coefficients[0];
@@ -169,6 +167,10 @@ namespace Calculator {
             return str.ToString();
         }
 
+        //private static int nCr(int n, int r) {
+
+        //}
+
         //public version (returns a string to print)
         public static string SyntheticDiv(string equation, string variable, int zero, out int rem) {
             if (!is_polynomial_1variable(equation, variable, out _))
@@ -182,7 +184,6 @@ namespace Calculator {
             return int_arr_to_str(ans, variable);
         }
 
-        //ints only pls
         public static string PolyFactor(string equation, string variable) {
             if (!is_polynomial_1variable(equation, variable, out _))
                 throw new Exception("Invalid input");
@@ -192,7 +193,7 @@ namespace Calculator {
 
             int[] coefficients = get_coefficients(unfactored, variable);
 
-            int zero = factor_theorem(equation, variable, out _);
+            int zero = get_factor(equation, variable, out _);
 
             //looks like x^2+5x+6 => x+3 => null
             int[] curr_equation = synthetic_div(zero, coefficients, out int rem);
@@ -204,7 +205,7 @@ namespace Calculator {
             bool broke = false;
             while (true) {
                 //factor theorem will break if it's not possible
-                zero = factor_theorem(int_arr_to_str(curr_equation, variable), variable, out bool possible);
+                zero = get_factor(int_arr_to_str(curr_equation, variable), variable, out bool possible);
                 if (!possible) {
                     broke = true;
                     break;
@@ -222,7 +223,6 @@ namespace Calculator {
             return ans;
         }
 
-        //ints only pls
         public static Term[] CombineLikeTerms(string equation, out string print) {
             Dictionary<string, int> like_terms = new();
             Term[] uncombined = parse(equation);
@@ -235,8 +235,8 @@ namespace Calculator {
 
             var ret = new Term[like_terms.Count];
             int i = 0;
-            foreach (KeyValuePair<string, int> pair in like_terms) {
-                ret[i++] = new Term(pair.Value, pair.Key);
+            foreach ((string key, int value) in like_terms) {
+                ret[i++] = new Term(value, key);
             }
 
             //out print
@@ -256,6 +256,14 @@ namespace Calculator {
             if (print.StartsWith("+")) print = print.Remove(0, 1);
 
             return ret;
+        }
+
+        public static /*Term[]*/ void BinomialTheorem(string equation, out string print) {
+
+
+
+
+            print = "";
         }
     }
 }

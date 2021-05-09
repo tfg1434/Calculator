@@ -22,7 +22,7 @@ namespace Calculator {
         };
         private const int right_associative = 0;
         private const int left_associative = 1;
-        private readonly Dictionary<string, int> associativity = new() {
+        private static readonly Dictionary<string, int> associativity = new() {
             ["^"] = right_associative,
             ["~"] = left_associative,
             ["*"] = left_associative,
@@ -30,7 +30,7 @@ namespace Calculator {
             ["+"] = left_associative,
             ["-"] = left_associative,
         };
-        private readonly string[] operators = { "+", "-", "*", "/", "^", "~" };
+        private static readonly string[] operators = { "+", "-", "*", "/", "^", "~" };
         //constants/variables
         //<string, string> so unary negate works ~
         private readonly Dictionary<string, string> constants = new() {
@@ -38,15 +38,6 @@ namespace Calculator {
             ["pi"] = DecimalEx.Pi.ToString(),
             ["tau"] = (DecimalEx.Pi * 2).ToString(),
         };
-
-        private readonly int _negate_precedence = -4;
-        public int NegatePrecedence {
-            get => _negate_precedence;
-            init {
-                precedence["~"] = value;
-                _negate_precedence = value;
-            }
-        }
 
         public List<string> Parse() {
             Stack<string> tokens = new();
@@ -153,8 +144,8 @@ namespace Calculator {
 
         public Parser(string str, Dictionary<string, string> variables) {
             lexer = new Lexer(implicit_mult(str));
-            foreach (KeyValuePair<string, string> variable in variables) {
-                constants.Add(variable.Key, variable.Value);
+            foreach ((string key, string value) in variables) {
+                constants.Add(key, value);
             }
         }
     }

@@ -29,12 +29,24 @@ namespace Calculator {
                 case "cas":
                     switch (args[2]) {
                         case "combineliketerms": {
+                            /*
+                            syntax: cas <equation> combineliketerms
+                            description: combines like terms
+                            notes: ints only
+                            */
+
                             CAS.CombineLikeTerms(equation, out string print);
                             Console.WriteLine(print);
                             break;
                         }
                             
                         case "polyfactor": {
+                            /*
+                            syntax: cas <equation> polyfactor <variable=x>
+                            description: factors a polynomial using factor theorem and synthetic division
+                            notes: ints only
+                            */
+
                             string variable = args.ElementAtOrDefault(3);
                             if (string.IsNullOrEmpty(variable)) 
                                 variable = "x";
@@ -42,12 +54,27 @@ namespace Calculator {
                             break;
                         }
                         case "syntheticdiv": {
+                            /*
+                            syntax: cas <equation> syntheticdiv <zero> <variable=x>
+                            description: uses synthetic division to divide a polynomial by x-a
+                            notes: ints only
+                            */
+
                             int zero = int.Parse(args[3]);
                             string variable = args.ElementAtOrDefault(4);
                             if (string.IsNullOrEmpty(variable))
                                 variable = "x";
                             string print = CAS.SyntheticDiv(equation, variable, zero, out int rem);
                             Console.WriteLine($"{print} | remainder: {rem}");
+                            break;
+                        }
+                        case "binomialtheorem": {
+                            /*
+                            syntax: cas <equation> binomialtheorem
+                            description: expands a binomial that was put to a power
+                            notes: ints only
+                            */
+                            CAS.BinomialTheorem(equation, out _);
                             break;
                         }
                     }
