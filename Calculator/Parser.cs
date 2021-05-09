@@ -44,10 +44,9 @@ namespace Calculator {
             foreach ((string key, string value) in variables)
                 variables_constants[key] = value;
 
-            Stack<string> tokens = Lexer.Lex(implicit_mult(equation));
+            Stack<string> tokens = new();
 
-
-            foreach (string token in tokens) {
+            foreach (string token in Lexer.Lex(implicit_mult(equation))) {
                 string str = token;
 
                 //constants and variables

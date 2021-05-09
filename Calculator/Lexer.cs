@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using ExtensionMethods;
 
 namespace Calculator {
     //splits string into tokens
@@ -62,12 +64,15 @@ namespace Calculator {
             }
         }
 
-        public static Stack<string> Lex(string src) {
+        public static Stack<string> Lex(string equation) {
+            src = equation;
+
             Stack<string> stack = new();
             while (!empty) {
                 stack.Push(next());
             }
 
+            stack = stack.Reverse();
             restart();
             return stack;
         }
