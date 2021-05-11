@@ -5,6 +5,7 @@ using ExtensionMethods;
 using DecimalMath;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Calculator.CAS;
 using static Calculator.Solver;
 
 namespace Calculator {
@@ -29,14 +30,15 @@ namespace Calculator {
                 }
                 case "cas":
                     switch (args[2]) {
-                        case "combineliketerms": {
+                        case "simplify": {
                             /*
                             syntax: cas <equation> combineliketerms
                             description: combines like terms
                             notes: ints only
                             */
 
-                            CAS.CombineLikeTerms(equation, out string print);
+                            Simplifier simplify = new();
+                            simplify.Simplify(equation, out string print);
                             Console.WriteLine(print);
                             break;
                         }
@@ -49,9 +51,10 @@ namespace Calculator {
                             */
 
                             string variable = args.ElementAtOrDefault(3);
-                            if (string.IsNullOrEmpty(variable)) 
+                            if (string.IsNullOrEmpty(variable))
                                 variable = "x";
-                            Console.WriteLine(CAS.PolyFactor(equation, variable));
+                            PolyFactor poly_factorizer = new();
+                            Console.WriteLine(poly_factorizer.Factor(equation, variable));
 
                             break;
 
@@ -67,7 +70,8 @@ namespace Calculator {
                             string variable = args.ElementAtOrDefault(4);
                             if (string.IsNullOrEmpty(variable))
                                 variable = "x";
-                            string print = CAS.SyntheticDiv(equation, variable, zero, out int rem);
+                            SyntheticDiv divider = new();
+                            string print = divider.Divide(equation, variable, zero, out int rem);
                             Console.WriteLine($"{print} | remainder: {rem}");
                             break;
                         }
@@ -77,7 +81,7 @@ namespace Calculator {
                             description: expands a binomial that was put to a power
                             notes: ints only
                             */
-                            CAS.BinomialTheorem(equation, out _);
+                            //CAS.BinomialTheorem(equation, out _);
                             break;
                         }
                     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -93,8 +94,7 @@ namespace Calculator {
             while (rem != 0) {
                 cur = -(cur + (cur >= 0 ? 1 : 0));
                 //sub[variable] = cur.ToString();//.Replace("-", "~");
-                SyntheticDiv(equation, variable, cur, out int rem_);
-                rem = rem_;
+                SyntheticDiv(equation, variable, cur, out rem);
 
                 if (cur > 9999) {
                     possible = false;
@@ -258,7 +258,7 @@ namespace Calculator {
             return ret;
         }
 
-        public static /*Term[]*/ void BinomialTheorem(string equation, out string print) {
+        public static  void BinomialTheorem(string equation, out string print) {
 
 
 
@@ -267,3 +267,4 @@ namespace Calculator {
         }
     }
 }
+*/
