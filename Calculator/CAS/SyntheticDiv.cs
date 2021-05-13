@@ -5,11 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Calculator.CAS {
-    class SyntheticDiv : CAS {
+    class SyntheticDiv {
         private readonly CASParser parser = new();
-        private readonly Simplifier simplify = new();
+        private readonly Simplifier simplifier = new();
 
-        public int[] Divide(int zero, int[] coefficients, out int rem) {
+        public string Div(string equation, string variable, int zero, out int rem) {
+            if (!parser.IsPolynomial1Variable(equation, variable, out _))
+                throw new Exception("Invalid input");
+
+            Term[] terms = simplifier.Simplify1Variable(equation, variable, out _);
+            int[] coefficients = parser.GetCoefficients(terms, variable);
+            int[] ans = Div(zero, coefficients, out int remainder);
+            rem = remainder;
+
+            return parser.IntArrToString(ans, variable);
+        }
+
+        public int[] Div(int zero, int[] coefficients, out int rem) {
             var ans = new int[coefficients.Length - 1]; //-1 because last term is remainder
             ans[0] = coefficients[0];
 
@@ -19,19 +31,6 @@ namespace Calculator.CAS {
             rem = coefficients[^1] + ans[^1] * zero;
 
             return ans;
-        }
-
-        public string Divide(string equation, string variable, int zero, out int rem) {
-            if (!parser.IsPolynomial1Variable(equation, variable, out _))
-                throw new Exception("Invalid input");
-
-            Term[] terms = simplify.Simplify(equation, out _);
-            parser.SortByExponent(terms, variable);
-            int[] coefficients = parser.GetCoefficients(terms, variable);
-            int[] ans = Divide(zero, coefficients, out int remainder);
-            rem = remainder;
-
-            return parser.IntArrToString(ans, variable);
         }
     }
 }

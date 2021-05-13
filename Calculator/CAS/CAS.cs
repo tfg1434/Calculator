@@ -5,17 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace Calculator.CAS {
-    abstract class CAS {
-        public readonly struct Term {
-            public int coefficient { get; }
-            public string term { get; }
+//shared stuff in the whole CAS class
 
-            //there's no access modifier to do exactly what i want, so we live with internal :p
-            internal Term(int coefficient, string term) {
-                this.coefficient = coefficient;
-                this.term = term;
-            }
+namespace Calculator.CAS {
+    public readonly struct Term {
+        public int coefficient { get; }
+        public string term { get; }
+
+        //there's no access modifier to do exactly what i want, so we live with internal :p
+        internal Term(int coefficient, string term) {
+            this.coefficient = coefficient;
+            this.term = term;
         }
     }
 }

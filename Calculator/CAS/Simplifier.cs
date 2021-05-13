@@ -5,12 +5,41 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Calculator.CAS {
-    class Simplifier : CAS {
+    class Simplifier {
         private readonly CASParser parser = new();
 
-        private Term[] combine_like_terms(string equation, out string print) {
+        public Term[] Simplify(string equation, out string print) {
+            Term[] ans = combine_like_terms(equation);
+
+            print = parser.TermArrToString(ans);
+            return ans;
+        }
+
+        public Term[] Simplify1Variable(string equation, string variable, out string print) {
+            if (!parser.IsPolynomial1Variable(equation, variable, out _))
+                throw new Exception("Invalid input");
+
+            Term[] ans = combine_like_terms(equation);
+            SortByExponent(ans, variable);
+
+            print = parser.TermArrToString(ans);
+            return ans;
+        }
+
+        public void SortByExponent(Term[] array, string variable) {
+            int comparer(Term t1, Term t2) {
+                int a = parser.Power(t1.term, variable);
+                int b = parser.Power(t2.term, variable);
+
+                return b - a;
+            }
+
+            Array.Sort(array, comparer);
+        }
+
+        private Term[] combine_like_terms(string what) {
             Dictionary<string, int> like_terms = new();
-            Term[] uncombined = parser.Parse(equation);
+            Term[] uncombined = parser.Parse(what);
             foreach (Term term in uncombined) {
                 if (like_terms.ContainsKey(term.term))
                     like_terms[term.term] += term.coefficient;
@@ -24,14 +53,7 @@ namespace Calculator.CAS {
                 ret[i++] = new Term(value, key);
             }
 
-            print = parser.TermArrToString(ret);
             return ret;
-        }
-
-        public Term[] Simplify(string equation, out string print) {
-            Term[] ans = combine_like_terms(equation, out print);
-
-            return ans;
         }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ExtensionMethods;
-using DecimalMath;
-using System.Text.RegularExpressions;
-using System.Threading;
 using Calculator.CAS;
 using static Calculator.Solver;
 
@@ -36,9 +32,8 @@ namespace Calculator {
                             description: combines like terms
                             notes: ints only
                             */
-
-                            Simplifier simplify = new();
-                            simplify.Simplify(equation, out string print);
+                            Simplifier simplifier = new();
+                            simplifier.Simplify(equation, out string print);
                             Console.WriteLine(print);
                             break;
                         }
@@ -71,7 +66,7 @@ namespace Calculator {
                             if (string.IsNullOrEmpty(variable))
                                 variable = "x";
                             SyntheticDiv divider = new();
-                            string print = divider.Divide(equation, variable, zero, out int rem);
+                            string print = divider.Div(equation, variable, zero, out int rem);
                             Console.WriteLine($"{print} | remainder: {rem}");
                             break;
                         }

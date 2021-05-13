@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace Calculator.CAS {
-    class CASParser : CAS {
-        private int power(string term, string variable) {
-            Match match = Regex.Match(term, $@"{variable}^(\d)");
+    class CASParser {
+        public int Power(string term, string variable) {
+            Match match = Regex.Match(term, $@"{variable}\^(\d)");
 
             if (match.Success)
                 return int.Parse(match.Groups[1].Value);
@@ -33,6 +33,37 @@ namespace Calculator.CAS {
             if (print.StartsWith("+")) print = print.Remove(0, 1);
 
             return print;
+        }
+
+        public string IntArrToString(int[] array, string variable) {
+            StringBuilder str = new();
+            int ii = array.Length;
+            foreach (int co in array) {
+                ii--;
+
+                if (co == 0)
+                    continue;
+
+                string print_co = co switch {
+                    -1 when ii != 0 => "-",
+                    1 when ii != 0 => "+",
+                    _ => co.ToString()[0] == '-' ? co.ToString() : "+" + co.ToString(),
+                };
+
+                string append = ii switch {
+                    > 1 => $"{print_co}{variable}^{ii}",
+                    1 => $"{print_co}{variable}",
+                    0 => print_co,
+                    _ => throw new Exception("wtf"),
+                };
+
+                str.Append(append);
+            }
+
+            if (str[0] == '+')
+                str = str.Remove(0, 1);
+
+            return str.ToString();
         }
 
         public Term[] Parse(string equation) {
@@ -79,24 +110,13 @@ namespace Calculator.CAS {
             return test == str;
         }
 
-        public void SortByExponent(Term[] array, string variable) {
-            int comparer(Term t1, Term t2) {
-                int a = power(t1.term, variable);
-                int b = power(t2.term, variable);
-
-                return b - a;
-            }
-
-            Array.Sort(array, comparer);
-        }
-
         public int[] GetCoefficients(Term[] terms, string variable) {
             SortByExponent(terms, variable);
-            int max_exp = power(terms[0].term, variable);
+            int max_exp = Power(terms[0].term, variable);
             int[] coefficients = new int[max_exp + 1]; //a polynomial to the power of 5 should have 6 coefficients
 
             for (var i = 0; i < coefficients.Length; i++) {
-                int index = Array.FindIndex(terms, t => power(t.term, variable) == max_exp - i);
+                int index = Array.FindIndex(terms, t => Power(t.term, variable) == max_exp - i);
                 if (index != -1)
                     coefficients[i] = terms[index].coefficient;
                 else
@@ -104,37 +124,18 @@ namespace Calculator.CAS {
             }
 
             return coefficients;
-        }
 
-        public string IntArrToString(int[] array, string variable) {
-            StringBuilder str = new();
-            int ii = array.Length;
-            foreach (int co in array) {
-                ii--;
 
-                if (co == 0)
-                    continue;
+            void SortByExponent(Term[] array, string var) {
+                int comparer(Term t1, Term t2) {
+                    int a = Power(t1.term, var);
+                    int b = Power(t2.term, var);
 
-                string print_co = co switch {
-                    -1 when ii != 0 => "-",
-                    1 when ii != 0 => "+",
-                    _ => co.ToString()[0] == '-' ? co.ToString() : "+" + co.ToString(),
-                };
+                    return b - a;
+                }
 
-                string append = ii switch {
-                    > 1 => $"{print_co}{variable}^{ii}",
-                    1 => $"{print_co}{variable}",
-                    0 => print_co,
-                    _ => throw new Exception("wtf"),
-                };
-
-                str.Append(append);
+                Array.Sort(array, comparer);
             }
-
-            if (str[0] == '+')
-                str = str.Remove(0, 1);
-
-            return str.ToString();
         }
     }
 }
