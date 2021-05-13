@@ -28,23 +28,20 @@ namespace Calculator.CAS {
             if (rem != 0)
                 throw new Exception("Not factorable!");
 
-            bool broke = false;
             while (true) {
                 //factor theorem will break if it's not possible
                 zero = get_factor(curr_equation, out bool possible);
                 if (!possible) {
-                    broke = true;
                     break;
                 }
                 curr_equation = synthetic_divider.Div(zero, curr_equation, out _);
                 ans += $"({variable}{(-zero < 0 ? -zero : "+" + -zero)})";
 
-                if (curr_equation.Length > 0 && curr_equation[0] == 1)
+                if (curr_equation.Length == 1 && curr_equation[0] == 1)
                     break;
             }
-            if (broke) {
+            if (!(curr_equation.Length == 1 && curr_equation[0] == 1))
                 ans += $"({parser.IntArrToString(curr_equation, variable)})";
-            }
 
             return ans;
         }
