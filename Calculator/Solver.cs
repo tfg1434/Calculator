@@ -46,25 +46,25 @@ namespace Calculator {
                             stack.Push(DecimalEx.ACos(decimal.Parse(stack.Pop())).ToString());
                             break;
                         case "darccos":
-                            stack.Push(DecimalEx.ACos(decimal.Parse(stack.Pop()) * 180 / DecimalEx.Pi).ToString());
+                            stack.Push(DecimalEx.ACos(decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180).ToString());
                             break;
                         case "arcsin":
                             stack.Push(DecimalEx.ASin(decimal.Parse(stack.Pop())).ToString());
                             break;
                         case "darcsin":
-                            stack.Push(DecimalEx.ASin(decimal.Parse(stack.Pop()) * 180 / DecimalEx.Pi).ToString());
+                            stack.Push(DecimalEx.ASin(decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180).ToString());
                             break;
                         case "arctan":
                             stack.Push(DecimalEx.ATan(decimal.Parse(stack.Pop())).ToString());
                             break;
                         case "darctan":
-                            stack.Push(DecimalEx.ATan(decimal.Parse(stack.Pop()) * 180 / DecimalEx.Pi).ToString());
+                            stack.Push(DecimalEx.ATan(decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180).ToString());
                             break;
                         case "arctan2":
                             stack.Push(DecimalEx.ATan2(decimal.Parse(stack.Pop()), decimal.Parse(stack.Pop())).ToString());
                             break;
                         case "darctan2":
-                            stack.Push(DecimalEx.ATan2(decimal.Parse(stack.Pop()) * 180 / DecimalEx.Pi, decimal.Parse(stack.Pop()) * 180 / DecimalEx.Pi).ToString());
+                            stack.Push(DecimalEx.ATan2(decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180, decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180).ToString());
                             break;
                         case "ceil":
                             stack.Push(DecimalEx.Ceiling(decimal.Parse(stack.Pop())).ToString());
@@ -83,7 +83,7 @@ namespace Calculator {
                             stack.Push(DecimalEx.Cos(decimal.Parse(stack.Pop())).ToString());
                             break;
                         case "dcos":
-                            stack.Push(DecimalEx.Cos(decimal.Parse(stack.Pop()) * 180 / DecimalEx.Pi).ToString());
+                            stack.Push(DecimalEx.Cos(decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180).ToString());
                             break;
                         case "mod": {
                                 decimal divisor = decimal.Parse(stack.Pop());
