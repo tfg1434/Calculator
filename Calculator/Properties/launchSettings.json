@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "cas 3x^2+10x-1000 polyfactor x"
+      "commandLineArgs": "eval max(cos(pi),dcos(90))"
     }
   }
 }

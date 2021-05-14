@@ -5,7 +5,7 @@ using Calculator.CAS;
 using static Calculator.Solver;
 
 namespace Calculator {
-    class Program {
+    static class Program {
         static void Main(string[] args) {
             string command = args[0];
             string equation = args[1];
