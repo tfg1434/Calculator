@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "cas (-3x+5)^4+30 simplify"
+      "commandLineArgs": "cas (x-2)^2-(x-2)^2 simplify"
     }
   }
 }

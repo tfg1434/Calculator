@@ -12,6 +12,8 @@ namespace Calculator.CAS {
     class Simplifier {
         private readonly CASParser parser = new();
 
+        //TODO: other powers (3x^2)^3, (3x+4x)^2
+
         public Term[] Simplify(string equation, out string print) {
             equation = binomial_theorem(equation);
 
@@ -41,9 +43,10 @@ namespace Calculator.CAS {
 
         private static string binomial_theorem(string equation) {
             MatchCollection matches = Regex.Matches(equation, @"\((\-?(?:[a-zA-Z]{1,}|\d[a-zA-Z]*))([+-](?:[a-zA-Z]{1,}|\d[a-zA-Z]*))\)\^(\d)");
+            StringBuilder ans = new();
 
             foreach (Match match in matches) {
-                StringBuilder ans = new();
+                ans.Clear();
                 uint max_exp = uint.Parse(match.Groups[^1].Value);
                 bool negative = match.Groups[1].Value[0] == '-' ^ match.Groups[2].Value[0] == '-';
 
@@ -65,7 +68,7 @@ namespace Calculator.CAS {
                     string print_co = co * term1.coefficient * term2.coefficient == 1
                         ? ""
                         : (co * term1.coefficient * term2.coefficient).ToString();
-                    if (print_co[0] != '-')
+                    if (print_co != "" && print_co[0] != '-')
                         print_co = print_co.Insert(0, "+");
 
                     ans.Append($"{print_co}{print_term1}{print_term2}");
@@ -85,12 +88,15 @@ namespace Calculator.CAS {
             if (val.All(char.IsDigit))
                 return new Term(int_pow(int.Parse(val), pow), "");
 
+            if (val.All(char.IsLetter))
+                return new Term(1, $"{val}^{pow}");
+
             //int co = int_pow(int.Parse(string.Concat(val.TakeWhile(char.IsDigit))), (uint)pow);
             string concat = string.Concat(val.TakeWhile(x => char.IsDigit(x) || x == '-' || x == '+'));
             int parsed = concat == "" ? 1 : int.Parse(concat);
             int co = int_pow(parsed, pow);
 
-            string terms_string = val.Replace(concat, "");
+            string terms_string = concat != "" ? val.Replace(concat, "") : concat;
             var terms = new string[terms_string.Count(char.IsLetter)];
             //x^2y^2z => [x^2, y^2, z]
             //slow af

@@ -27,6 +27,8 @@ namespace Calculator.CAS {
                 }
                 if (print_coefficient == "-1" && print_like_term != "") print_coefficient = "-";
                 if (print_coefficient == "1" && print_like_term != "") print_coefficient = "";
+                if (print_coefficient == "0")
+                    print_coefficient = print_like_term = "";
 
                 print += print_coefficient.StartsWith("-") ? print_coefficient + print_like_term : "+" + print_coefficient + print_like_term;
             }
