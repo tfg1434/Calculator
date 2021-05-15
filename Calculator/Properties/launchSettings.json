@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "eval max(cos(pi),dcos(90))"
+      "commandLineArgs": "cas (x-2)^2 simplify"
     }
   }
 }

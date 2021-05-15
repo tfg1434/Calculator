@@ -8,6 +8,22 @@ using DecimalMath;
 
 namespace Calculator {
     static class Solver {
+        public static decimal Solve(string equation, Dictionary<string, string> variables) => eval(Parser.Parse(equation, variables));
+
+        public static int NCr(int n, int r) {
+            if (!(r >= 0 && n >= r))
+                throw new Exception("nCr: must be n >= r >= 0");
+
+            return fact(n) / (fact(r) * fact(n - r));
+        }
+
+        private static int fact(int num) {
+            int ans = 1;
+            for (int i = 1; i <= num; i++)
+                ans *= i;
+            return ans;
+        }
+
         private static decimal eval(List<string> rpn) {
             string[] operators = { "+", "-", "*", "/", "^" };
             Stack<string> stack = new();
@@ -91,6 +107,9 @@ namespace Calculator {
                                 stack.Push((val % divisor).ToString());
                                 break;
                             }
+                        case "fact":
+                            stack.Push(fact((int)decimal.Parse(stack.Pop())).ToString());
+                            break;
                         case "floor":
                             stack.Push(Math.Floor(decimal.Parse(stack.Pop())).ToString());
                             break;
@@ -121,6 +140,12 @@ namespace Calculator {
                                 stack.Push(Math.Min(val1, val2).ToString());
                                 break;
                             }
+                        case "ncr": {
+                            int r = (int)decimal.Parse(stack.Pop());
+                            int n = (int)decimal.Parse(stack.Pop());
+                            stack.Push(NCr(n, r).ToString());
+                            break;
+                        }
                         case "round":
                             stack.Push(Math.Round(decimal.Parse(stack.Pop())).ToString());
                             break;
@@ -147,7 +172,5 @@ namespace Calculator {
 
             return decimal.Parse(stack.Pop());
         }
-
-        public static decimal Solve(string equation, Dictionary<string, string> variables) => eval(Parser.Parse(equation, variables));
     }
 }
