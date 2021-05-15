@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -25,6 +26,8 @@ namespace Calculator.CAS {
         }
 
         public Term[] Simplify1Variable(string equation, string variable, out string print) {
+            equation = binomial_theorem(equation);
+
             if (!parser.IsPolynomial1Variable(equation, variable, out _))
                 throw new Exception("Invalid input");
 
@@ -37,40 +40,57 @@ namespace Calculator.CAS {
         }
 
         private static string binomial_theorem(string equation) {
-            MatchCollection matches = Regex.Matches(equation, @"\(([a-zA-Z]*|\d|\d[a-zA-Z]*)([+-])([a-zA-Z]*|\d|\d[a-zA-Z]*)\)\^(\d)");
-            StringBuilder ans = new();
+            MatchCollection matches = Regex.Matches(equation, @"\((\-?(?:[a-zA-Z]{1,}|\d[a-zA-Z]*))([+-](?:[a-zA-Z]{1,}|\d[a-zA-Z]*))\)\^(\d)");
 
             foreach (Match match in matches) {
-                int max_exp = int.Parse(match.Groups[^1].Value);
+                StringBuilder ans = new();
+                uint max_exp = uint.Parse(match.Groups[^1].Value);
+                bool negative = match.Groups[1].Value[0] == '-' ^ match.Groups[2].Value[0] == '-';
 
-                for (int i = 0; i < max_exp + 1; i++) {
-                    int pow1 = max_exp - i;
-                    int pow2 = i;
+                for (uint i = 0; i < max_exp + 1; i++) {
+                    uint pow1 = max_exp - i;
+                    uint pow2 = i;
 
-                    int co = NCr(max_exp, max_exp - i);
+                    int co = (int)NCr(max_exp, max_exp - i);
+                    //if (negative)
+                    //    co = i % 2 == 0 ? co : -co;
                     Term term1 = power(match.Groups[1].Value, pow1);
-                    Term term2 = power(match.Groups[3].Value, pow2);
+                    Term term2 = power(match.Groups[2].Value, pow2);
 
-                    ans.Append($"{co * term1.coefficient * term2.coefficient}{term1.term}{term2.term}");
+
+                    string print_term1 = term1.term.EndsWith("^0") ? "" : term1.term;
+                    print_term1 = print_term1.Replace("^1", "");
+                    string print_term2 = term2.term.EndsWith("^0") ? "" : term2.term;
+                    print_term2 = print_term2.Replace("^1", "");
+                    string print_co = co * term1.coefficient * term2.coefficient == 1
+                        ? ""
+                        : (co * term1.coefficient * term2.coefficient).ToString();
+                    if (print_co[0] != '-')
+                        print_co = print_co.Insert(0, "+");
+
+                    ans.Append($"{print_co}{print_term1}{print_term2}");
                 }
+
+                if (ans[0] == '+')
+                    ans.Remove(0, 1);
+
+                int index = equation.IndexOf(match.Value);
+                equation = equation.Remove(index, match.Length).Insert(index, ans.ToString());
             }
 
-            //pow1 = new int[]
-            return "";
-            //TODO: FIX BUGS
-            //TODO: NEGATIVE (x-a)^2
+            return equation;
         }
 
-        private static Term power(string val, int pow) {
+        private static Term power(string val, uint pow) {
             if (val.All(char.IsDigit))
-                return new Term(int_pow(int.Parse(val), (uint)pow), "");
+                return new Term(int_pow(int.Parse(val), pow), "");
 
-                //int co = int_pow(int.Parse(string.Concat(val.TakeWhile(char.IsDigit))), (uint)pow);
-            string concat = string.Concat(val.TakeWhile(char.IsDigit));
+            //int co = int_pow(int.Parse(string.Concat(val.TakeWhile(char.IsDigit))), (uint)pow);
+            string concat = string.Concat(val.TakeWhile(x => char.IsDigit(x) || x == '-' || x == '+'));
             int parsed = concat == "" ? 1 : int.Parse(concat);
-            int co = int_pow(parsed, (uint)pow);
+            int co = int_pow(parsed, pow);
 
-            string terms_string = val.Replace(co.ToString(), "");
+            string terms_string = val.Replace(concat, "");
             var terms = new string[terms_string.Count(char.IsLetter)];
             //x^2y^2z => [x^2, y^2, z]
             //slow af

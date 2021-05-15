@@ -10,16 +10,16 @@ namespace Calculator {
     static class Solver {
         public static decimal Solve(string equation, Dictionary<string, string> variables) => eval(Parser.Parse(equation, variables));
 
-        public static int NCr(int n, int r) {
-            if (!(r >= 0 && n >= r))
+        public static uint NCr(uint n, uint r) {
+            if (n < r)
                 throw new Exception("nCr: must be n >= r >= 0");
 
             return fact(n) / (fact(r) * fact(n - r));
         }
 
-        private static int fact(int num) {
-            int ans = 1;
-            for (int i = 1; i <= num; i++)
+        private static uint fact(uint num) {
+            uint ans = 1;
+            for (uint i = 1; i <= num; i++)
                 ans *= i;
             return ans;
         }
@@ -108,7 +108,7 @@ namespace Calculator {
                                 break;
                             }
                         case "fact":
-                            stack.Push(fact((int)decimal.Parse(stack.Pop())).ToString());
+                            stack.Push(fact((uint)decimal.Parse(stack.Pop())).ToString());
                             break;
                         case "floor":
                             stack.Push(Math.Floor(decimal.Parse(stack.Pop())).ToString());
@@ -141,8 +141,8 @@ namespace Calculator {
                                 break;
                             }
                         case "ncr": {
-                            int r = (int)decimal.Parse(stack.Pop());
-                            int n = (int)decimal.Parse(stack.Pop());
+                            uint r = (uint)decimal.Parse(stack.Pop());
+                            uint n = (uint)decimal.Parse(stack.Pop());
                             stack.Push(NCr(n, r).ToString());
                             break;
                         }
