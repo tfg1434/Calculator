@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Calculator.CAS;
 using static Calculator.Solver;
 
 namespace Calculator {
     static class Program {
         static void Main(string[] args) {
-            string command = args[0];
-            string equation = args[1];
+            string command = args.ElementAtOrDefault(0);
+            string equation = args.ElementAtOrDefault(1);
 
             switch (command) {
                 case "eval": {
@@ -24,7 +25,7 @@ namespace Calculator {
                     Console.WriteLine(Solve(equation, variables));
                     break;
                 }
-                case "cas":
+                case "cas": {
                     switch (args[2]) {
                         case "simplify": {
                             /*
@@ -37,7 +38,7 @@ namespace Calculator {
                             Console.WriteLine(print);
                             break;
                         }
-                            
+
                         case "polyfactor": {
                             /*
                             syntax: cas <equation> polyfactor <variable=x>
@@ -81,12 +82,20 @@ namespace Calculator {
                             Console.WriteLine(binomial_theorem.Expand(equation));
                             break;
                         }
+                        default:
+                            Console.WriteLine("usage:\n  dotnet run cas <subcommand> <args>");
+                            break;
                     }
 
                     break;
+                }
+
+                default:
+                    Console.WriteLine($"unknown command {command}");
+                    Console.WriteLine("\navailable commands:\n  eval\n  cas");
+                    Console.WriteLine("\nusage:\n  dotnet run <command> <args>");
+                    break;
             }
         }
-
-        
     }
 }
