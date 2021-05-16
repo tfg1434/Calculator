@@ -76,7 +76,9 @@ namespace Calculator {
                             description: expands a binomial that was put to a power
                             notes: ints only
                             */
-                            //CAS.BinomialTheorem(equation, out _);
+
+                            BinomialTheorem binomial_theorem = new();
+                            Console.WriteLine(binomial_theorem.Expand(equation));
                             break;
                         }
                     }

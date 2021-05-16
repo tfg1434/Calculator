@@ -17,6 +17,17 @@ namespace Calculator {
             return fact(n) / (fact(r) * fact(n - r));
         }
 
+        public static int IntPow(int x, uint pow) {
+            int ret = 1;
+            while (pow != 0) {
+                if ((pow & 1) == 1)
+                    ret *= x;
+                x *= x;
+                pow >>= 1;
+            }
+            return ret;
+        }
+
         private static uint fact(uint num) {
             uint ans = 1;
             for (uint i = 1; i <= num; i++)
