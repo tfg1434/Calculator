@@ -30,8 +30,8 @@ Simplify a polynomial
 $ dotnet run cas 'x^2+2x^2-3x' simplify
 3x^2-3x
 
-$ dotnet run cas '(-3x+5)^4+30' simplify
-81x^4-540x^3+1350x^2-1500x+655
+$ dotnet run cas '(-3x+5)^4' binomialtheorem
+81x^4-540x^3+1350x^2-1500x+625
 ```
 
 Factorize a polynomial
