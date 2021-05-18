@@ -63,6 +63,9 @@ namespace Calculator {
                     }
                 }
 
+                if (operators.Contains(str) && tokens.Count > 0 && operators.Contains(tokens.Peek()))
+                    throw new Exception($"Unexpected operator {str}");
+
                 tokens.Push(str);
             }
             tokens = tokens.Reverse();
