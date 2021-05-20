@@ -42,12 +42,22 @@ namespace Calculator {
             foreach (string token in rpn) {
                 if (decimal.TryParse(token, out _)) {
                     stack.Push(token);
-                    continue;
 
                 } else if (operators.Contains(token)) {
                     //it's an operator
-                    decimal n1 = decimal.Parse(stack.Pop());
-                    decimal n2 = decimal.Parse(stack.Pop());
+
+                    if (stack.Count == 0)
+                        throw new Exception($"{token}: expected number, got nothing");
+                    string pop = stack.Pop();
+                    if (!decimal.TryParse(pop, out decimal n1))
+                        throw new Exception($"{token}: expected number, got {pop}");
+
+                    if (stack.Count == 0)
+                        throw new Exception($"{token}: expected number, got nothing"); //now its the lexers fault not parsing the .
+                    pop = stack.Pop();
+                    if (!decimal.TryParse(pop, out decimal n2))
+                        throw new Exception($"{token}: expected number, got {pop}");
+
 
                     stack.Push(token switch {
                         "^" => DecimalEx.Pow(n2, n1).ToString(),

@@ -23,7 +23,9 @@ namespace Calculator {
                 advance_while(char.IsLetter);
                 return substr;
 
-            } else if (char.IsDigit(x)) {
+            }
+
+            if (char.IsDigit(x)) {
                 advance_while(char.IsDigit);
                 //this instead of one lambda so you only get 1 .
                 if (empty || src[cursor_end] != '.') return substr;
@@ -31,16 +33,16 @@ namespace Calculator {
                 advance_while(char.IsDigit);
                 return substr;
 
-            } else {
-                //fractional num (.01)
-                cursor_end++;
-                if (x == '.' && !empty && char.IsDigit(src[cursor_end])) {
-                    advance_while(char.IsDigit);
-                    return substr;
-                }
-
-                return x.ToString();
             }
+
+            //fractional num (.01)
+            cursor_end++;
+            if (x == '.' && !empty && char.IsDigit(src[cursor_end])) {
+                advance_while(char.IsDigit);
+                return substr;
+            }
+
+            return x.ToString();
         }
 
         private static void restart() {

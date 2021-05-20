@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 using ExtensionMethods;
@@ -46,7 +47,7 @@ namespace Calculator {
 
             Stack<string> tokens = new();
 
-            foreach (string token in Lexer.Lex(implicit_mult(equation))) {
+            foreach (string token in Lexer.Lex(equation)) {
                 string str = token;
 
                 //constants and variables
@@ -57,14 +58,33 @@ namespace Calculator {
                         tokens.Push("*");
                     }
 
+                    //this is for constants/variables, thus not in Lexer
                     if (str.Contains("~")) {
                         str = str.Replace("~", "");
                         tokens.Push("~");
                     }
                 }
 
+
+                //implicit multiplication
+                //number -> open parenthesis 3(
+                if (str == "(" && tokens.Count > 0 && Regex.Match(tokens.Peek(), @"\d(?:\.\d)?").Success)
+                    tokens.Push("*");
+                //close parenthesis -> number )3 || close parenthesis -> . ).01
+                if (tokens.Count > 0 && tokens.Peek() == ")" && Regex.Match(str, @"\d(?:\.\d)?").Success)
+                    tokens.Push("*");
+                //close parenthesis -> open parenthesis
+                if (str == "(" && tokens.Count > 0 && tokens.Peek() == ")")
+                    tokens.Push("*");
+
+
+                //error handling
                 if (operators.Contains(str) && tokens.Count > 0 && operators.Contains(tokens.Peek()))
                     throw new Exception($"Unexpected operator {str}");
+
+                //is it a function not followed by (?
+                if (tokens.Count > 0 && tokens.Peek().Any(char.IsLetter) && str != "(")
+                    throw new Exception($"Expected (, got {str}");
 
                 tokens.Push(str);
             }
@@ -96,27 +116,32 @@ namespace Calculator {
 
                     operator_stack.Push(token);
 
-                } else switch (token) {
-                    case "(":
-                        operator_stack.Push(token);
-                        break;
-                    case ")": {
-                        while (operator_stack.Count > 0 && operator_stack.Peek() != "(") {
-                            rpn.Add(operator_stack.Pop());
-                        }
-                        //If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
-                        if (operator_stack.Count == 0) {
-                            throw new Exception("Mismatched parenthesis");
+                } else {
+                    switch (token) {
+                        case "(":
+                            operator_stack.Push(token);
+                            break;
+                        case ")": {
+                            while (operator_stack.Count > 0 && operator_stack.Peek() != "(") {
+                                rpn.Add(operator_stack.Pop());
+                            }
+
+                            //If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
+                            if (operator_stack.Count == 0) {
+                                throw new Exception("Mismatched parenthesis");
+                            }
+
+                            if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
+                                operator_stack.Pop();
+                            }
+
+                            if (operator_stack.Count > 0 && operator_stack.Peek().All(char.IsLetter)) {
+                                rpn.Add(operator_stack.Pop());
+                            }
+
+                            break;
                         }
 
-                        if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
-                            operator_stack.Pop();
-                        }
-                        if (operator_stack.Count > 0 && operator_stack.Peek().All(char.IsLetter)) {
-                            rpn.Add(operator_stack.Pop());
-                        }
-
-                        break;
                     }
                 }
             }
@@ -132,17 +157,6 @@ namespace Calculator {
             }
 
             return rpn;
-        }
-
-        private static string implicit_mult(string equation) {
-            //number -> open parenthesis 3(
-            equation = Regex.Replace(equation, "([0-9])[(]", "$1*(");
-            //close parenthesis -> number )3 || close parenthesis -> . ).01
-            equation = Regex.Replace(equation, "[)]([0-9|.])", ")*$1");
-            //close parenthesis -> open parenthesis
-            equation = Regex.Replace(equation, "[)][(]", ")*(");
-
-            return equation;
         }
     }
 }
