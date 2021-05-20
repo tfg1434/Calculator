@@ -13,6 +13,11 @@ namespace Calculator {
 
             switch (command) {
                 case "eval": {
+                    if (equation == default) {
+                        Console.WriteLine("usage:\n  eval <expression> [<variables>]");
+                        break;
+                    }
+
                     Dictionary<string, string> variables = new();
                     for (var i = 2; i < args.Length; i++) {
                         //variable looks like a=5
@@ -26,6 +31,11 @@ namespace Calculator {
                     break;
                 }
                 case "cas": {
+                    if (equation == default) {
+                        Console.WriteLine("usage:\n  cas <equation> <command> [<args>]");
+                        break;
+                    }
+
                     switch (args[2]) {
                         case "simplify": {
                             /*

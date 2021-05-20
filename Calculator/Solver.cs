@@ -53,7 +53,7 @@ namespace Calculator {
                         throw new Exception($"{token}: expected number, got {pop}");
 
                     if (stack.Count == 0)
-                        throw new Exception($"{token}: expected number, got nothing"); //now its the lexers fault not parsing the .
+                        throw new Exception($"{token}: expected number, got nothing");
                     pop = stack.Pop();
                     if (!decimal.TryParse(pop, out decimal n2))
                         throw new Exception($"{token}: expected number, got {pop}");
