@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "eval"
+      "commandLineArgs": "eval z*r z=5 =r=5"
     }
   }
 }

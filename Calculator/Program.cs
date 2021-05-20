@@ -19,12 +19,11 @@ namespace Calculator {
                     }
 
                     Dictionary<string, string> variables = new();
-                    for (var i = 2; i < args.Length; i++) {
-                        //variable looks like a=5
-                        variables.Add(
-                            args[i].Split("=")[0],
-                            args[i].Split("=")[1]
-                        );
+                    foreach (string variable in args.Skip(2)) {
+                        string[] split = variable.Split("=");
+                        if (split.Length != 2)
+                            throw new Exception($"malformed variable assignment: {variable}");
+                        variables[split[0]] = split[1];
                     }
 
                     Console.WriteLine(Solve(equation, variables));
