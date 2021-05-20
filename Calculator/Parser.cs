@@ -80,11 +80,11 @@ namespace Calculator {
 
                 //error handling
                 if (operators.Contains(str) && tokens.Count > 0 && operators.Contains(tokens.Peek()))
-                    throw new Exception($"Unexpected operator {str}");
+                    throw new ArgumentException($"Unexpected operator {str}");
 
                 //is it a function not followed by (?
                 if (tokens.Count > 0 && tokens.Peek().Any(char.IsLetter) && str != "(")
-                    throw new Exception($"Expected (, got {str}");
+                    throw new ArgumentException($"Expected (, got {str}");
 
                 tokens.Push(str);
             }
@@ -128,7 +128,7 @@ namespace Calculator {
 
                             //If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
                             if (operator_stack.Count == 0) {
-                                throw new Exception("Mismatched parenthesis");
+                                throw new ArgumentException("Mismatched parenthesis");
                             }
 
                             if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
@@ -150,7 +150,7 @@ namespace Calculator {
             while (operator_stack.Count > 0) {
                 //If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses.
                 if (operator_stack.Peek() == "(" || operator_stack.Peek() == ")") {
-                    throw new Exception("Mismatched Parentheses");
+                    throw new ArgumentException("Mismatched Parentheses");
                 }
 
                 rpn.Add(operator_stack.Pop());

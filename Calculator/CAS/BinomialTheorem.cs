@@ -11,7 +11,7 @@ namespace Calculator.CAS {
         public string Expand(string equation) {
             Match match = Regex.Match(equation, @"\((\-?(?:[a-zA-Z]{1,}|\d[a-zA-Z]*))([+-](?:[a-zA-Z]{1,}|\d[a-zA-Z]*))\)\^(\d)");
             if (!match.Success)
-                throw new Exception("Invalid input!");
+                throw new Exception("Invalid input, wasn't a binomial to a power!");
 
             return binomial_theorem(equation, match);
         }

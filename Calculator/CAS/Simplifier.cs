@@ -13,7 +13,7 @@ namespace Calculator.CAS {
 
         public Term[] Simplify(string equation, out string print) {
             if (!parser.IsPolynomial(equation, out _))
-                throw new Exception("Invalid input");
+                throw new ArgumentException("Invalid input, wasn't a polynomial");
 
             Term[] terms = parser.Parse(equation);
             Term[] ans = combine_like_terms(terms);
@@ -24,7 +24,7 @@ namespace Calculator.CAS {
 
         public Term[] Simplify1Variable(string equation, string variable, out string print) {
             if (!parser.IsPolynomial1Variable(equation, variable, out _))
-                throw new Exception("Invalid input");
+                throw new ArgumentException("Invalid input, not a polynomial with 1 variable");
 
             Term[] terms = parser.Parse(equation);
             Term[] ans = combine_like_terms(terms);

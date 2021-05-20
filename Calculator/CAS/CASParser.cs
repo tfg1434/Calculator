@@ -56,7 +56,7 @@ namespace Calculator.CAS {
                     > 1 => $"{print_co}{variable}^{ii}",
                     1 => $"{print_co}{variable}",
                     0 => print_co,
-                    _ => throw new Exception("wtf"),
+                    _ => throw new ArgumentOutOfRangeException("wtf"),
                 };
 
                 str.Append(append);
@@ -74,7 +74,7 @@ namespace Calculator.CAS {
             //([+-]?(?:(?:(?:\d+)?(?:[a-zA-Z]+(?:\^\d+)?)*)*|(?:\d+[a-zA-Z]*)|(?:\d+)|(?:[a-zA-Z]))) FIRST REGEX
             //test if it's a valid polynomial
             if (!IsPolynomial(equation, out MatchCollection matches))
-                throw new Exception("Invalid input");
+                throw new ArgumentException("Not a polynomial");
 
             var ret = new Term[matches.Count - 1];
             for (int i = 0; i < ret.Length; i++) {
