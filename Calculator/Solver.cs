@@ -12,7 +12,7 @@ namespace Calculator {
 
         public static uint NCr(uint n, uint r) {
             if (n < r)
-                throw new ArgumentOutOfRangeException("nCr: must be n >= r >= 0");
+                throw new OutOfRangeExpcetion("nCr: must be n >= r >= 0");
 
             return fact(n) / (fact(r) * fact(n - r));
         }
@@ -47,16 +47,16 @@ namespace Calculator {
                     //it's an operator
 
                     if (stack.Count == 0)
-                        throw new ArgumentException($"{token}: expected number, got nothing");
+                        throw new SyntaxException($"{token}: expected number, got nothing");
                     string pop = stack.Pop();
                     if (!decimal.TryParse(pop, out decimal n1))
-                        throw new ArgumentException($"{token}: expected number, got {pop}");
+                        throw new SyntaxException($"{token}: expected number, got {pop}");
 
                     if (stack.Count == 0)
-                        throw new ArgumentException($"{token}: expected number, got nothing");
+                        throw new SyntaxException($"{token}: expected number, got nothing");
                     pop = stack.Pop();
                     if (!decimal.TryParse(pop, out decimal n2))
-                        throw new ArgumentException($"{token}: expected number, got {pop}");
+                        throw new SyntaxException($"{token}: expected number, got {pop}");
 
 
                     stack.Push(token switch {
@@ -65,7 +65,7 @@ namespace Calculator {
                         "/" => (n2 / n1).ToString(),
                         "+" => (n2 + n1).ToString(),
                         "-" => (n2 - n1).ToString(),
-                        _ => throw new ArgumentOutOfRangeException("wtf"),
+                        _ => throw new ArgumentOutOfRangeException(),
                     });
 
                 } else {
@@ -186,7 +186,7 @@ namespace Calculator {
                             stack.Push(Math.Truncate(decimal.Parse(stack.Pop())).ToString());
                             break;
                         default:
-                            throw new ArgumentException($"Unknown function token {token}");
+                            throw new SyntaxException($"Unknown function token {token}");
                     }
                 }
             }

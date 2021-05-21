@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "cas (x-2)^2 binomialtheorem"
+      "commandLineArgs": "eval a(3) a=1"
     }
   }
 }

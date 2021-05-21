@@ -78,11 +78,11 @@ namespace Calculator {
 
                 //error handling
                 if (operators.Contains(str) && tokens.Count > 0 && operators.Contains(tokens[^1]))
-                    throw new ArgumentException($"Unexpected operator {str}");
+                    throw new SyntaxException($"Unexpected operator {str}");
 
                 //is it a function not followed by (?
                 if (tokens.Count > 0 && tokens[^1].Any(char.IsLetter) && str != "(" && !variables_constants.ContainsKey(tokens[^1]))
-                    throw new ArgumentException($"Expected (, got {str}");
+                    throw new SyntaxException($"Expected (, got {str}");
 
                 tokens.Add(str);
             }
@@ -153,8 +153,8 @@ namespace Calculator {
                 if (decimal.TryParse(token, out _)) {
                     rpn.Add(token);
 
-                } else if (token.All(char.IsLetter)) {
-                    //operator
+                } else if ((token ?? throw new InvalidOperationException()).All(char.IsLetter)) {
+                    //function
                     operator_stack.Push(token);
 
                 } else if (operators.Contains(token)) {
@@ -178,7 +178,7 @@ namespace Calculator {
 
                             //If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
                             if (operator_stack.Count == 0) {
-                                throw new ArgumentException("Mismatched parenthesis");
+                                throw new SyntaxException("Mismatched parenthesis");
                             }
 
                             if (operator_stack.Count > 0 && operator_stack.Peek() == "(") {
@@ -200,7 +200,7 @@ namespace Calculator {
             while (operator_stack.Count > 0) {
                 //If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses.
                 if (operator_stack.Peek() == "(" || operator_stack.Peek() == ")") {
-                    throw new ArgumentException("Mismatched Parentheses");
+                    throw new SyntaxException("Mismatched parentheses");
                 }
 
                 rpn.Add(operator_stack.Pop());

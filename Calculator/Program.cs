@@ -23,7 +23,7 @@ namespace Calculator {
                         foreach (string variable in args.Skip(2)) {
                             string[] split = variable.Split("=");
                             if (split.Length != 2)
-                                throw new ArgumentException($"malformed variable assignment: {variable}");
+                                throw new MalformedVariableException($"malformed variable assignment: {variable}");
                             variables[split[0]] = split[1];
                         }
 
@@ -107,8 +107,8 @@ namespace Calculator {
                         break;
                 }
 
-            } catch (Exception e) {
-                Console.WriteLine($"error: {e.Message}");
+            } catch (InvalidInputException e) {
+                Console.WriteLine($"An error occured!\n{e.GetType()}: {e.Message}");
             }
         }
     }

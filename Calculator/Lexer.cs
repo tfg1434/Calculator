@@ -44,7 +44,7 @@ namespace Calculator {
             }
 
             if (x is not ('+' or '-' or '/' or '*' or ',' or '(' or ')'))
-                throw new ArgumentException($"Unexpected char {x}");
+                throw new SyntaxException($"Unexpected char {x}");
 
             return x.ToString();
         }

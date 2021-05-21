@@ -13,7 +13,7 @@ namespace Calculator.CAS {
 
         public string Factor(string equation, string variable) {
             if (!parser.IsPolynomial1Variable(equation, variable, out _))
-                throw new ArgumentException("Invalid input");
+                throw new NotPolynomial1VariableException("Invalid input");
 
             Term[] unfactored = simplifier.Simplify1Variable(equation, variable, out _);
 
@@ -26,7 +26,7 @@ namespace Calculator.CAS {
             //looks like (x+3) => (x+3)(x+2)
             string ans = $"({variable}{(-zero < 0 ? -zero : "+" + -zero)})";
             if (rem != 0)
-                throw new ArgumentException("Binomial was not factorable!");
+                throw new NotPossibleException("Polynomial was not factorable!");
 
             while (true) {
                 //factor theorem will break if it's not possible

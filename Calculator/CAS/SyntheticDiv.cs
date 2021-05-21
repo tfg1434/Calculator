@@ -11,7 +11,7 @@ namespace Calculator.CAS {
 
         public string Div(string equation, string variable, int zero, out int rem) {
             if (!parser.IsPolynomial1Variable(equation, variable, out _))
-                throw new ArgumentException("Invalid input, wasn't a polynomial with 1 variable");
+                throw new NotPolynomial1VariableException("Invalid input, wasn't a polynomial with 1 variable");
 
             Term[] terms = simplifier.Simplify1Variable(equation, variable, out _);
             int[] coefficients = parser.GetCoefficients(terms, variable);
