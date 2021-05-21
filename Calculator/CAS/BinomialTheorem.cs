@@ -75,7 +75,7 @@ namespace Calculator.CAS {
                 terms[i++] = match.Value;
                 terms_string = terms_string.Remove(terms_string.IndexOf(match.Value, StringComparison.Ordinal), match.Length);
             }
-            foreach (char var in terms_string.ToCharArray()) {
+            foreach (char var in terms_string) {
                 terms[i++] = var.ToString();
             }
 
