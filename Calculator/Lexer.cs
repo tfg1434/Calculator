@@ -16,11 +16,12 @@ namespace Calculator {
         private static bool empty => cursor_end >= src.Length;
         private static string substr => src[cursor_begin..cursor_end];
 
-        private static string next() {
+        private static string next(Dictionary<string, string> variables_constants) {
             reset();
             char x = src[cursor_end];
+
             if (char.IsLetter(x)) {
-                advance_while(char.IsLetter);
+                advance_while(y => char.IsLetter(y) && !variables_constants.TryGetValue(src[cursor_begin..cursor_end], out _));
                 return substr;
 
             }
@@ -69,12 +70,12 @@ namespace Calculator {
             }
         }
 
-        public static Stack<string> Lex(string equation) {
+        public static Stack<string> Lex(string equation, Dictionary<string, string> variables_constants) {
             src = equation;
 
             Stack<string> stack = new();
             while (!empty) {
-                stack.Push(next());
+                stack.Push(next(variables_constants));
             }
 
             stack = stack.Reverse();

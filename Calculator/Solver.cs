@@ -8,7 +8,7 @@ using DecimalMath;
 
 namespace Calculator {
     static class Solver {
-        public static decimal Solve(string equation, Dictionary<string, string> variables) => eval(Parser.Parse(equation, variables));
+        public static decimal Solve(List<string> equation) => eval(equation);
 
         public static uint NCr(uint n, uint r) {
             if (n < r)

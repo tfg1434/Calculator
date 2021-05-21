@@ -27,7 +27,7 @@ namespace Calculator {
                             variables[split[0]] = split[1];
                         }
 
-                        Console.WriteLine(Solve(equation, variables));
+                        Console.WriteLine(Solve(Parser.ShuntingYard(Parser.InsertVariablesConstants(Parser.Parse(equation, variables), variables))));
                         break;
                     }
                     case "cas": {
