@@ -45,10 +45,14 @@ Perform synthetic division on a polynomial
 $ dotnet run cas 'x^2-5x+6' syntheticdiv 2 x
 x-3 | remainder: 0
 ```
-
 and more to come! (hopefully)
 
 
+## Equation Solver (hillclimbing)
+```
+$ dotnet run hillclimb 'x^2-2x+1' x
+1.0
+```
+
 ## ROADMAP
 * More CAS functions
-* Equation solver
