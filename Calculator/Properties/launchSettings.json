@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "eval a(3) a=1"
+      "commandLineArgs": "eval 4(3)"
     }
   }
 }

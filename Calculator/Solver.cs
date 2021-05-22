@@ -97,10 +97,10 @@ namespace Calculator {
                         case "darctan":
                             stack.Push(DecimalEx.ATan(decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180).ToString());
                             break;
-                        case "arctan2":
+                        case "arctantwo":
                             stack.Push(DecimalEx.ATan2(decimal.Parse(stack.Pop()), decimal.Parse(stack.Pop())).ToString());
                             break;
-                        case "darctan2":
+                        case "darctantwo":
                             stack.Push(DecimalEx.ATan2(decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180, decimal.Parse(stack.Pop()) * DecimalEx.Pi / 180).ToString());
                             break;
                         case "ceil":
@@ -143,10 +143,10 @@ namespace Calculator {
                                 stack.Push(DecimalEx.Log(val, my_base).ToString());
                                 break;
                             }
-                        case "log10":
+                        case "logten":
                             stack.Push(DecimalEx.Log10(decimal.Parse(stack.Pop())).ToString());
                             break;
-                        case "log2":
+                        case "logtwo":
                             stack.Push(DecimalEx.Log2(decimal.Parse(stack.Pop())).ToString());
                             break;
                         case "max": {

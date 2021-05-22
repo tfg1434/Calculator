@@ -48,28 +48,12 @@ namespace Calculator {
             foreach (string token in Lexer.Lex(equation, variables_constants)) {
                 string str = token;
 
-                ////constants and variables
-                //if (variables_constants.ContainsKey(str)) {
-                //    str = variables_constants[str];
-
-                //    if (tokens.Count > 0 && tokens.Peek().All(char.IsDigit)) {
-                //        tokens.Push("*");
-                //    }
-
-                //    //this is for constants/variables, thus not in Lexer
-                //    if (str.Contains("~")) {
-                //        str = str.Replace("~", "");
-                //        tokens.Push("~");
-                //    }
-                //}
-
-
                 //implicit multiplication
-                //number -> open parenthesis 3(
-                if (str == "(" && tokens.Count > 0 && Regex.Match(tokens[^1], @"\d(?:\.\d)?").Success)
+                //number -> open parenthesis 3( || constant -> open parenthesis a(
+                if (str == "(" && tokens.Count > 0 && (Regex.Match(tokens[^1], @"\d(?:\.\d)?").Success || variables_constants.ContainsKey(tokens[^1])))
                     tokens.Add("*");
-                //close parenthesis -> number )3 || close parenthesis -> . ).01
-                if (tokens.Count > 0 && tokens[^1] == ")" && Regex.Match(str, @"\d(?:\.\d)?").Success)
+                //close parenthesis -> number )3 || close parenthesis -> . ).01 || close parenthesis -> constant )a
+                if (tokens.Count > 0 && tokens[^1] == ")" && (Regex.Match(str, @"\d(?:\.\d)?").Success || variables_constants.ContainsKey(str)))
                     tokens.Add("*");
                 //close parenthesis -> open parenthesis
                 if (str == "(" && tokens.Count > 0 && tokens[^1] == ")")
@@ -147,8 +131,8 @@ namespace Calculator {
             List<string> rpn = new();
 
             while (tokens.Count > 0) {
-                string token = tokens[^1];
-                tokens.RemoveAt(tokens.Count - 1);
+                string token = tokens[0];
+                tokens.RemoveAt(0);
                 
                 if (decimal.TryParse(token, out _)) {
                     rpn.Add(token);
