@@ -20,10 +20,10 @@ namespace Calculator {
                         }
 
                         Dictionary<string, string> variables = new();
-                        foreach (string variable in args.Skip(2)) {
-                            string[] split = variable.Split("=");
+                        for (int i = 2; i < args.Length; i++) {
+                            string[] split = args[i].Split("=");
                             if (split.Length != 2)
-                                throw new MalformedVariableException($"malformed variable assignment: {variable}");
+                                throw new MalformedVariableException($"malformed variable assignment: {args[i]}");
                             variables[split[0]] = split[1];
                         }
 
@@ -67,15 +67,17 @@ namespace Calculator {
                             }
                             case "syntheticdiv": {
                                 /*
-                                syntax: cas <equation> syntheticdiv <zero> <variable=x>
+                                syntax: cas <equation> syntheticdiv zero <variable=x>
                                 description: uses synthetic division to divide a polynomial by x-a
                                 notes: ints only
                                 */
 
-                                int zero = int.Parse(args[3]);
-                                string variable = args.ElementAtOrDefault(4);
-                                if (string.IsNullOrEmpty(variable))
-                                    variable = "x";
+                                if (!int.TryParse(args.ElementAtOrDefault(3), out int zero)) {
+                                    Console.WriteLine("usage:\n  dotnet run cas syntheticdiv zero <variable=x>");
+                                    break;
+                                }
+
+                                string variable = args.ElementAtOrDefault(4) ?? "x";
                                 SyntheticDiv divider = new();
                                 string print = divider.Div(equation, variable, zero, out int rem);
                                 Console.WriteLine($"{print} | remainder: {rem}");
@@ -96,6 +98,34 @@ namespace Calculator {
                                 Console.WriteLine("usage:\n  dotnet run cas <subcommand> <args>");
                                 break;
                         }
+
+                        break;
+                    }
+
+                    case "hillclimb": {
+                        const string usage = "usage:\n  hillclimb <expression> <unknown> [<variables>]";
+
+                        if (equation == default) {
+                            Console.WriteLine(usage);
+                            break;
+                        }
+
+                        string unknown = args.ElementAtOrDefault(2);
+                        if (unknown == default) {
+                            Console.WriteLine(usage);
+                            break;
+                        }
+
+                        Dictionary<string, string> variables = new();
+                        for (int i = 3; i < args.Length; i++) {
+                            string[] split = args[i].Split("=");
+                            if (split.Length != 2)
+                                throw new MalformedVariableException($"malformed variable assignment: {args[i]}");
+                            variables[split[0]] = split[1];
+                        }
+
+                        //now hillclimb
+                        Console.WriteLine(HillClimb.HillClimbing(equation, variables, unknown));
 
                         break;
                     }

@@ -83,7 +83,7 @@ namespace Calculator {
                 string curr = equation[i];
                 string next = equation[i + 1];
 
-                if (variables_constants.TryGetValue(curr, out string val)) {
+                if (variables_constants.ContainsKey(curr) || variables_constants.ContainsKey(next)) {
                     //3a
                     if (next.All(char.IsLetter) && Regex.Match(curr, @"\d(?:\.\d)?").Success) {
                         equation.Insert(i + 1, "*");
@@ -108,8 +108,8 @@ namespace Calculator {
             }
 
             for (int i = 0; i < equation.Count; i++) {
-                if (variables_constants.TryGetValue(equation[i], out string val_))
-                    equation[i] = val_;
+                if (variables_constants.TryGetValue(equation[i], out string val))
+                    equation[i] = val;
             }
 
             int index = equation.IndexOf("~");
