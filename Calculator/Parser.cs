@@ -77,7 +77,8 @@ namespace Calculator {
         //check the first val for constant
         public static List<string> InsertVariablesConstants(List<string> equation, Dictionary<string, string> variables) {
             Dictionary<string, string> variables_constants = new(constants);
-            variables.ToList().ForEach(x => variables_constants[x.Key] = x.Value);
+            foreach ((string key, string value) in variables)
+                variables_constants[key] = value;
 
             for (int i = 0; i < equation.Count - 1; i++) {
                 string curr = equation[i];

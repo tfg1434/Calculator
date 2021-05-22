@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleCalculator": {
       "commandName": "Project",
-      "commandLineArgs": "hillclimb x^2-2x+1 x"
+      "commandLineArgs": "hillclimb x+1 x"
     }
   }
 }

@@ -14,10 +14,13 @@ namespace Calculator {
 
         public static decimal HillClimbing(string equation, Dictionary<string, string> variables, string unknown, decimal resolution = 0.1M) {
             decimal val = 0;
+
+            //parse/replace everything except unknown
+            Dictionary<string, string> variables_no_unknown = new Dictionary<string, string>(variables);
             variables[unknown] = val.ToString();
+            List<string> parsed = Parser.InsertVariablesConstants(Parser.Parse(equation, new Dictionary<string, string>(variables)), variables_no_unknown);
 
             decimal step = resolution;
-            List<string> parsed = Parser.Parse(equation, variables);
             decimal min = Math.Abs(Solve(Parser.ShuntingYard(Parser.InsertVariablesConstants(new List<string>(parsed), variables))));
 
             while (true) {
@@ -48,7 +51,5 @@ namespace Calculator {
                 }
             }
         }
-
-        //write an overload that takes no variables, just unknown and List<string>
     }
 }
