@@ -43,7 +43,7 @@ namespace Calculator {
                 return substr;
             }
 
-            if (x is not ('+' or '-' or '/' or '*' or ',' or '(' or ')'))
+            if (x is not ('+' or '-' or '/' or '*' or '^' or ',' or '(' or ')'))
                 throw new SyntaxException($"Unexpected char {x}");
 
             return x.ToString();
