@@ -50,6 +50,5 @@ and more to come! (hopefully)
 
 
 ## ROADMAP
-* A grammar, so you get notified 100% of the time when your input is invalid
 * More CAS functions
-* Equation solver 
+* Equation solver
