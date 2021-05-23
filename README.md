@@ -45,6 +45,13 @@ Perform synthetic division on a polynomial
 $ dotnet run cas 'x^2-5x+6' syntheticdiv 2 x
 x-3 | remainder: 0
 ```
+
+Use shoelace formula to calculate area of polygon given vertices
+```
+$ dotnet run cas (1,6)(3,-1)(-5,-3)(-4,3) shoelace
+43.5
+```
+
 and more to come! (hopefully)
 
 
