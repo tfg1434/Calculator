@@ -18,10 +18,10 @@ namespace Calculator.CAS {
 
         public string TermArrToString(Term[] array) {
             string print = "";
-            foreach (Term term in array) {
-                string print_like_term = term.term.Replace("^1", "");
-                string print_coefficient = term.coefficient.ToString();
-                if (term.term.Contains("^0")) {
+            foreach ((int coefficient, string term) in array) {
+                string print_like_term = term.Replace("^1", "");
+                string print_coefficient = coefficient.ToString();
+                if (term.Contains("^0")) {
                     //print_coefficient = "1";
                     print_like_term = "";
                 }

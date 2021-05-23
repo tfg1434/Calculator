@@ -40,13 +40,13 @@ namespace Calculator.CAS {
         }
 
         public decimal Shoelace(string vertices) {
-            (decimal[] x, decimal[] y) coords = get_coords(get_vertices(vertices));
+            (decimal[] x, decimal[] y) = get_coords(get_vertices(vertices));
             decimal sum1 = 0;
             decimal sum2 = 0;
 
-            for (int i = 0; i < coords.x.Length; i++) {
-                sum1 += coords.x[i % vertices.Length] * coords.y[(i + 1) % coords.x.Length];
-                sum2 += coords.y[i % vertices.Length] * coords.x[(i + 1) % coords.x.Length];
+            for (int i = 0; i < x.Length; i++) {
+                sum1 += x[i % vertices.Length] * y[(i + 1) % x.Length];
+                sum2 += y[i % vertices.Length] * x[(i + 1) % x.Length];
             }
 
             return Math.Abs(sum1 - sum2) / 2;
