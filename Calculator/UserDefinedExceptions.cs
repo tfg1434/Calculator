@@ -17,6 +17,12 @@ namespace Calculator {
         public MalformedVariableException(string message, Exception inner) : base(message, inner) { }
     }
 
+    class MalformedVerticeException : InvalidInputException {
+        public MalformedVerticeException() { }
+        public MalformedVerticeException(string message) : base(message) { }
+        public MalformedVerticeException(string message, Exception inner) : base(message, inner) { }
+    }
+
     class NotPossibleException : InvalidInputException {
         public NotPossibleException() { }
         public NotPossibleException(string message) : base(message) { }

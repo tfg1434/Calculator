@@ -50,10 +50,10 @@ namespace Calculator {
 
                 //implicit multiplication
                 //number -> open parenthesis 3( || constant -> open parenthesis a(
-                if (str == "(" && tokens.Count > 0 && (Regex.Match(tokens[^1], @"\d(?:\.\d)?").Success || variables_constants.ContainsKey(tokens[^1])))
+                if (str == "(" && tokens.Count > 0 && (Regex.IsMatch(tokens[^1], @"\d") || variables_constants.ContainsKey(tokens[^1])))
                     tokens.Add("*");
                 //close parenthesis -> number )3 || close parenthesis -> . ).01 || close parenthesis -> constant )a
-                if (tokens.Count > 0 && tokens[^1] == ")" && (Regex.Match(str, @"\d(?:\.\d)?").Success || variables_constants.ContainsKey(str)))
+                if (tokens.Count > 0 && tokens[^1] == ")" && (Regex.IsMatch(str, @"\d") || variables_constants.ContainsKey(str)))
                     tokens.Add("*");
                 //close parenthesis -> open parenthesis
                 if (str == "(" && tokens.Count > 0 && tokens[^1] == ")")
@@ -86,14 +86,14 @@ namespace Calculator {
 
                 if (variables_constants.ContainsKey(curr) || variables_constants.ContainsKey(next)) {
                     //3a
-                    if (next.All(char.IsLetter) && Regex.Match(curr, @"\d(?:\.\d)?").Success) {
+                    if (next.All(char.IsLetter) && Regex.IsMatch(curr, @"\d")) {
                         equation.Insert(i + 1, "*");
                         i++;
                         continue;
                     }
 
                     //a3
-                    if (curr.All(char.IsLetter) && Regex.Match(next, @"\d(?:\.\d)?").Success) {
+                    if (curr.All(char.IsLetter) && Regex.IsMatch(next, @"\d")) {
                         equation.Insert(i + 1, "*");
                         i++;
                         continue;

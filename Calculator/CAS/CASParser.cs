@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace Calculator.CAS {
     class CASParser {
         public int Power(string term, string variable) {
-            Match match = Regex.Match(term, $@"{variable}\^(\d)");
+            Match match = Regex.Match(term, $@"{variable}\^([0-9]+)");
 
             if (match.Success)
                 return int.Parse(match.Groups[1].Value);
@@ -94,7 +94,7 @@ namespace Calculator.CAS {
 
         //is polynomial with any amount of variables?
         public bool IsPolynomial(string str, out MatchCollection matches) {
-            matches = Regex.Matches(str, @"([+-]?(?:(?:(?:\d+)?(?:[a-zA-Z]+(?:\^\d+)?)*)*|(?:\d+[a-zA-Z]*)|(?:\d+)|(?:[a-zA-Z])))");
+            matches = Regex.Matches(str, @"([+-]?(?:(?:(?:[0-9]+)?(?:[a-zA-Z]+(?:\^[0-9]+)?)*)*|(?:[0-9]+[a-zA-Z]*)|(?:[0-9]+)|(?:[a-zA-Z])))");
 
             string test = "";
             foreach (Match match in matches)
@@ -104,7 +104,7 @@ namespace Calculator.CAS {
 
         //is it a polynomial with a specific variable?
         public bool IsPolynomial1Variable(string str, string variable, out MatchCollection matches) {
-            matches = Regex.Matches(str, $@"([+-]?(?:(?:(?:\d+)?{variable}\^\d+)|(?:\d+{variable})|(?:\d+)|(?:{variable})))");
+            matches = Regex.Matches(str, $@"([+-]?(?:(?:(?:[0-9]+)?{variable}\^[0-9]+)|(?:[0-9]+{variable})|(?:[0-9]+)|(?:{variable})))");
 
             string test = "";
             foreach (Match match in matches)

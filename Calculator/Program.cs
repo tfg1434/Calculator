@@ -7,7 +7,7 @@ using static Calculator.Solver;
 
 namespace Calculator {
     static class Program {
-        static void Main(string[] args) {
+        private static void Main(string[] args) {
             string command = args.ElementAtOrDefault(0);
             string equation = args.ElementAtOrDefault(1);
 
@@ -39,7 +39,7 @@ namespace Calculator {
                         switch (args[2]) {
                             case "simplify": {
                                 /*
-                                syntax: cas <equation> combineliketerms
+                                syntax: cas <equation> simplify
                                 description: combines like terms
                                 notes: ints only
                                 */
@@ -48,7 +48,6 @@ namespace Calculator {
                                 Console.WriteLine(print);
                                 break;
                             }
-
                             case "polyfactor": {
                                 /*
                                 syntax: cas <equation> polyfactor <variable=x>
@@ -56,9 +55,7 @@ namespace Calculator {
                                 notes: ints only
                                 */
 
-                                string variable = args.ElementAtOrDefault(3);
-                                if (string.IsNullOrEmpty(variable))
-                                    variable = "x";
+                                string variable = args.ElementAtOrDefault(3) ?? "x";
                                 PolyFactor poly_factorizer = new();
                                 Console.WriteLine(poly_factorizer.Factor(equation, variable));
 
@@ -94,6 +91,19 @@ namespace Calculator {
                                 Console.WriteLine(binomial_theorem.Expand(equation));
                                 break;
                             }
+                            case "shoelace": {
+                                /*
+                                cas <vertices> shoelace
+                                description: calculates the area of a polygon
+                                notes:
+                                    polygon can be concave or convex, just not intersecting
+                                    vertices must be defined ccw or cw
+                                    vertices look like (x,y)(x,y)(x,y)
+                                 */
+                                ShoelaceAlgorithm shoelace = new();
+                                Console.WriteLine(shoelace.Shoelace(args[1]));
+                                break;
+                            }
                             default:
                                 Console.WriteLine("usage:\n  dotnet run cas <subcommand> <args>");
                                 break;
@@ -101,18 +111,14 @@ namespace Calculator {
 
                         break;
                     }
-
                     case "hillclimb": {
-                        const string usage = "usage:\n  hillclimb <expression> <unknown> [<variables>]";
-
-                        if (equation == default) {
-                            Console.WriteLine(usage);
-                            break;
-                        }
+                        /*
+                        hillclimb <expression> <unknown> [<variables>]
+                        */
 
                         string unknown = args.ElementAtOrDefault(2);
-                        if (unknown == default) {
-                            Console.WriteLine(usage);
+                        if (equation == default || unknown == default) {
+                            Console.WriteLine("usage:\n  hillclimb <expression> <unknown> [<variables>]");
                             break;
                         }
 
@@ -132,7 +138,7 @@ namespace Calculator {
 
                     default:
                         Console.WriteLine($"unknown command {command}");
-                        Console.WriteLine("\navailable commands:\n  eval\n  cas");
+                        Console.WriteLine("\navailable commands:\n  eval\n  cas\n  hillclimb");
                         Console.WriteLine("\nusage:\n  dotnet run <command> <args>");
                         break;
                 }

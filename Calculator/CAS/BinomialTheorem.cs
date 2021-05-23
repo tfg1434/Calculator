@@ -9,7 +9,7 @@ using static Calculator.Solver;
 namespace Calculator.CAS {
     class BinomialTheorem {
         public string Expand(string equation) {
-            Match match = Regex.Match(equation, @"\((\-?(?:[a-zA-Z]{1,}|\d[a-zA-Z]*))([+-](?:[a-zA-Z]{1,}|\d[a-zA-Z]*))\)\^(\d)");
+            Match match = Regex.Match(equation, @"\((\-?(?:[a-zA-Z]{1,}|[0-9]+[a-zA-Z]*))([+-](?:[a-zA-Z]{1,}|[0-9]+[a-zA-Z]*))\)\^([0-9]+)");
             if (!match.Success)
                 throw new NotPolynomialException("Input wasn't a binomial to a power.");
 
@@ -70,7 +70,7 @@ namespace Calculator.CAS {
             //x^2y^2z => [x^2, y^2, z]
             //slow af
             int i = 0;
-            MatchCollection matches = Regex.Matches(terms_string, @"[a-zA-Z]\^\d");
+            MatchCollection matches = Regex.Matches(terms_string, @"[a-zA-Z]\^[0-9]+");
             foreach (Match match in matches) {
                 terms[i++] = match.Value;
                 terms_string = terms_string.Remove(terms_string.IndexOf(match.Value, StringComparison.Ordinal), match.Length);
@@ -103,7 +103,7 @@ namespace Calculator.CAS {
         }
 
         private static string get_first_num(string input) {
-            Match match = Regex.Match(input, @"^(?:\d|\+|\-)+");
+            Match match = Regex.Match(input, @"^(?:[0-9]+|\+|\-)+");
             return match.Success ? match.Value : "";
         }
     }
